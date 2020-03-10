@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a85644b45e731b40bb5439f463a2e55, type: 3}
   m_Name: GrassTile
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -5134201130421952826, guid: 7044819b8d3713b4999f84b7c2771297,
+  m_Sprite: {fileID: -6996269655453082332, guid: 7044819b8d3713b4999f84b7c2771297,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
@@ -35,5 +35,4 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  grassSprites: []
-  preview: {fileID: 0}
+  sprites: []

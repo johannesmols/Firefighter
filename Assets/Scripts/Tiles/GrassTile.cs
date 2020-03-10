@@ -8,18 +8,19 @@ namespace Assets.Scripts.Tiles
 {
     public class GrassTile : Tile
     {
-        [SerializeField] private Sprite[] sprites;
+        [SerializeField] 
+        private Sprite[] sprites;
 
 #if UNITY_EDITOR
-        [MenuItem("Assets/Create/Tiles/GrassTiles")]
+        [MenuItem("Assets/Create/Tiles/Grass Tiles")]
         public static void CreateGrassTile()
         {
-            var path = EditorUtility.SaveFilePanelInProject("Save Grass Tile", "New Water Tile", "asset",
+            var path = EditorUtility.SaveFilePanelInProject("Save Grass Tile", "New Grass Tile", "asset",
                 "Save grass tile", "Assets");
 
             if (!string.IsNullOrWhiteSpace(path))
             {
-                AssetDatabase.CreateAsset(ScriptableObject.CreateInstance<GrassTile>(), path);
+                AssetDatabase.CreateAsset(CreateInstance<GrassTile>(), path);
             }
         }
 #endif
