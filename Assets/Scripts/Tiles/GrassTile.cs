@@ -11,6 +11,9 @@ namespace Assets.Scripts.Tiles
         [SerializeField] 
         private Sprite[] sprites;
 
+        public const bool flammable = true;
+        public const bool movable = true;
+
 #if UNITY_EDITOR
         [MenuItem("Assets/Create/Tiles/Grass Tiles")]
         public static void CreateGrassTile()

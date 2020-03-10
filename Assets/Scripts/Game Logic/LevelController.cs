@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
@@ -56,7 +57,17 @@ public class LevelController : MonoBehaviour
         foreach (var fireTile in tiles[typeof(FireTile)])
         {
             var neigbors = FindNeighbors(fireTile, tiles);
-            // Todo: Do stuff like fire spreading
+            foreach (var neighborType in neigbors.Keys)
+            {
+                if (neighborType == typeof(FireTile))
+                    continue;
+
+                var neighborsWithType = neigbors[neighborType];
+                foreach (var neighbor in neighborsWithType)
+                {
+                    tilemap.SetTile(neighbor, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/FireTile.asset", typeof(FireTile)) as FireTile);
+                }
+            }
         }
     }
 

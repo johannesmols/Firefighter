@@ -14,6 +14,9 @@ namespace Assets.Scripts.Tiles
         [SerializeField]
         private Sprite[] sprites;
 
+        public const bool flammable = false;
+        public const bool movable = false;
+
 #if UNITY_EDITOR
         [MenuItem("Assets/Create/Tiles/Fire Tiles")]
         public static void CreateFireTile()

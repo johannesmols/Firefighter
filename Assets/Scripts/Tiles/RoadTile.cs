@@ -14,6 +14,9 @@ namespace Assets.Scripts.Tiles
         [SerializeField]
         private Sprite[] sprites;
 
+        public const bool flammable = true;
+        public const bool movable = true;
+
 #if UNITY_EDITOR
         [MenuItem("Assets/Create/Tiles/Road Tile")]
         public static void CreateRoadTile()
