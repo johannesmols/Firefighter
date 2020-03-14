@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Objects;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,13 +10,17 @@ using UnityEngine.Tilemaps;
 
 namespace Assets.Scripts.Tiles
 {
-    public class FireTile : Tile
+    public class FireTile : GameTile
     {
-        [SerializeField]
-        private Sprite[] sprites;
-
-        public const bool flammable = false;
-        public const bool movable = false;
+        public FireTile()
+        {
+            TileProperties = new TileProperties
+            {
+                IsMovable = false,
+                IsFlammable = false,
+                IsGoal = false
+            };
+        }
 
 #if UNITY_EDITOR
         [MenuItem("Assets/Create/Tiles/Fire Tiles")]

@@ -9,6 +9,8 @@ using UnityEngine.Tilemaps;
 
 public class LevelController : MonoBehaviour
 {
+    public bool DynamicFireSpread = true;
+
     private Tilemap tilemap;
     private List<Vector3Int> tilesInWorldSpace;
 
@@ -51,21 +53,28 @@ public class LevelController : MonoBehaviour
         {
             { typeof(FireTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is FireTile).ToList() },
             { typeof(GrassTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is GrassTile).ToList() },
-            { typeof(RoadTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is RoadTile).ToList() }
+            { typeof(RoadTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is RoadTile).ToList() },
+            { typeof(ObstacleTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is ObstacleTile).ToList() }
         };
 
+        SpreadFire(tiles);
+    }
+
+    private void SpreadFire(Dictionary<System.Type, List<Vector3Int>> tiles)
+    {
         foreach (var fireTile in tiles[typeof(FireTile)])
         {
-            var neigbors = FindNeighbors(fireTile, tiles);
-            foreach (var neighborType in neigbors.Keys)
+            var neighbors = FindNeighbors(fireTile, tiles);
+            var flammableNeighbors = new List<Vector3Int>();
+            foreach (var neighborType in neighbors.Keys)
             {
-                if (neighborType == typeof(FireTile))
-                    continue;
-
-                var neighborsWithType = neigbors[neighborType];
-                foreach (var neighbor in neighborsWithType)
+                foreach (var neighbor in neighbors[neighborType])
                 {
-                    tilemap.SetTile(neighbor, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/FireTile.asset", typeof(FireTile)) as FireTile);
+                    var tile = (GameTile) tilemap.GetTile(neighbor);
+                    if (tile.TileProperties.IsFlammable)
+                    {
+                        tilemap.SetTile(neighbor, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/FireTile.asset", typeof(FireTile)) as FireTile);
+                    }
                 }
             }
         }
