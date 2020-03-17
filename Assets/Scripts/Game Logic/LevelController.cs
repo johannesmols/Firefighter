@@ -89,6 +89,7 @@ public class LevelController : MonoBehaviour
 
         if (IsGameOver(tiles))
         {
+            Debug.Log("Game Over!");
             return;
         }
 
