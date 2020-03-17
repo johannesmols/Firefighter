@@ -36,28 +36,31 @@ public class LevelController : MonoBehaviour
 
         if (Input.GetMouseButtonDown(0))
         {
-            var clickedCell = tilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-            var clickedTile = (AbstractGameTile) tilemap.GetTile(clickedCell);
-            var currentUnit = playerUnits[currentlySelectedUnit];
-            var distance = TilemapHelper.GetDistanceBetweenTiles(currentUnit.TilePosition, clickedCell);
-            if (distance <= currentUnit.ActionPoints && clickedTile.TileProperties.IsMovable)
+            if (playerUnits.Count > 0)
             {
-                currentUnit.ActionPoints -= distance;
-                currentUnit.TilePosition = clickedCell;
-                currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
-
-                if (currentUnit.ActionPoints == 0)
+                var clickedCell = tilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                var clickedTile = (AbstractGameTile)tilemap.GetTile(clickedCell);
+                var currentUnit = playerUnits[currentlySelectedUnit];
+                var distance = TilemapHelper.GetDistanceBetweenTiles(currentUnit.TilePosition, clickedCell);
+                if (distance <= currentUnit.ActionPoints && clickedTile.TileProperties.IsMovable)
                 {
-                    Debug.Log("Action points for unit " + currentUnit + " exhausted, moving on to the next");
+                    currentUnit.ActionPoints -= distance;
+                    currentUnit.TilePosition = clickedCell;
+                    currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
 
-                    if (currentlySelectedUnit < playerUnits.Count - 1)
+                    if (currentUnit.ActionPoints == 0)
                     {
-                        currentlySelectedUnit++;
-                    }
-                    else
-                    {
-                        currentlySelectedUnit = 0;
-                        UpdateTiles();
+                        Debug.Log("Action points for unit " + currentUnit + " exhausted, moving on to the next");
+
+                        if (currentlySelectedUnit < playerUnits.Count - 1)
+                        {
+                            currentlySelectedUnit++;
+                        }
+                        else
+                        {
+                            currentlySelectedUnit = 0;
+                            UpdateTiles();
+                        }
                     }
                 }
             }
