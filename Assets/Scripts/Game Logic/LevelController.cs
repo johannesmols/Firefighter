@@ -10,6 +10,7 @@ using UnityEngine.Tilemaps;
 public class LevelController : MonoBehaviour
 {
     public bool DynamicFireSpread = true;
+    public bool gameOver = false;
 
     private Tilemap tilemap;
     private List<Vector3Int> tilesInWorldSpace;
@@ -49,15 +50,21 @@ public class LevelController : MonoBehaviour
     /// </summary>
     private void UpdateTiles()
     {
+    
         var tiles = new Dictionary<System.Type, List<Vector3Int>>
         {
             { typeof(FireTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is FireTile).ToList() },
             { typeof(GrassTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is GrassTile).ToList() },
             { typeof(RoadTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is RoadTile).ToList() },
-            { typeof(ObstacleTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is ObstacleTile).ToList() }
+            { typeof(ObstacleTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is ObstacleTile).ToList() },
+            { typeof(GoalTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is GoalTile).ToList() }
         };
-
-        SpreadFire(tiles);
+        
+        if(isGameOver(tiles)) {
+            return; 
+        } else {
+            SpreadFire(tiles);
+        }
     }
 
     private void SpreadFire(Dictionary<System.Type, List<Vector3Int>> tiles)
@@ -78,6 +85,13 @@ public class LevelController : MonoBehaviour
                 }
             }
         }
+    }
+
+    private Boolean isGameOver(Dictionary<System.Type, List<Vector3Int>> tiles) {
+        if(tiles[typeof(GoalTile)].Count == 0) {
+            gameOver = true;
+        }
+        return gameOver;
     }
 
     /// <summary>
