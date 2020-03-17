@@ -32,12 +32,15 @@ public class LevelController : MonoBehaviour
 
     public void Update()
     {
+        playerUnits.RemoveAll(item => item == null); // remove destroyed units
+
         if (Input.GetMouseButtonDown(0))
         {
             var clickedCell = tilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            var clickedTile = (AbstractGameTile) tilemap.GetTile(clickedCell);
             var currentUnit = playerUnits[currentlySelectedUnit];
             var distance = TilemapHelper.GetDistanceBetweenTiles(currentUnit.TilePosition, clickedCell);
-            if (distance <= currentUnit.ActionPoints)
+            if (distance <= currentUnit.ActionPoints && clickedTile.TileProperties.IsMovable)
             {
                 currentUnit.ActionPoints -= distance;
                 currentUnit.TilePosition = clickedCell;
