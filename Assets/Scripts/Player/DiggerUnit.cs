@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Tiles;
+﻿using Assets.Scripts.Helpers;
+using Assets.Scripts.Tiles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,6 @@ namespace Assets.Scripts.Player
     public class DiggerUnit : AbstractUnit
     {
         private Transform objectTransform;
-        private Vector3Int tilePosition;
 
         public void Start()
         {
@@ -21,13 +21,13 @@ namespace Assets.Scripts.Player
 
             if (Tilemap != null)
             {
-                tilePosition = Tilemap.WorldToCell(objectTransform.position);
-                if (Tilemap.HasTile(tilePosition))
+                TilePosition = Tilemap.WorldToCell(objectTransform.position);
+                if (Tilemap.HasTile(TilePosition))
                 {
-                    var tile = (AbstractGameTile) Tilemap.GetTile(tilePosition);
+                    var tile = (AbstractGameTile) Tilemap.GetTile(TilePosition);
                     if (tile.TileProperties.IsMovable && !(tile is FireTile))
                     {
-                        objectTransform.position = new Vector3(Tilemap.CellToWorld(tilePosition).x, 0, Tilemap.CellToWorld(tilePosition).z);
+                        objectTransform.position = new Vector3(Tilemap.CellToWorld(TilePosition).x, 0, Tilemap.CellToWorld(TilePosition).z);
                     }
                     else
                     {
@@ -39,7 +39,18 @@ namespace Assets.Scripts.Player
             }
             else
             {
-                Debug.LogError("No tilemap defined for Digger unit");
+                Debug.LogError("No tilemap defined for Digger unit, destroying it");
+                Destroy(gameObject);
+            }
+        }
+
+        public void Update()
+        {
+            // Check if the unit was hit by fire
+            var fireTiles = TilemapHelper.GetTileCoordinates(Tilemap).Where(t => Tilemap.GetTile(t) is FireTile).ToList();
+            if (fireTiles.Contains(TilePosition))
+            {
+                Destroy(gameObject);
             }
         }
     }

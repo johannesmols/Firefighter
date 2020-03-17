@@ -13,6 +13,7 @@ namespace Assets.Scripts.Player
         public Tilemap Tilemap;
         public UnitType UnitType;
 
+        protected Vector3Int TilePosition;
         protected int ActionPoints;
     }
 }
