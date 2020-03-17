@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d501a0f6dfcde12438ef8147afc1a28c, type: 3}
   m_Name: FireTile
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -195675102619424291, guid: 7044819b8d3713b4999f84b7c2771297,
+  m_Sprite: {fileID: -3622335861228183011, guid: 7044819b8d3713b4999f84b7c2771297,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:
@@ -35,4 +35,3 @@ MonoBehaviour:
   m_InstancedGameObject: {fileID: 0}
   m_Flags: 1
   m_ColliderType: 1
-  sprites: []
