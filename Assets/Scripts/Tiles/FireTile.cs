@@ -10,7 +10,7 @@ using UnityEngine.Tilemaps;
 
 namespace Assets.Scripts.Tiles
 {
-    public class FireTile : GameTile
+    public class FireTile : AbstractGameTile
     {
         public FireTile()
         {

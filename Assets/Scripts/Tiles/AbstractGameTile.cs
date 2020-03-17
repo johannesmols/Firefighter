@@ -9,7 +9,7 @@ using UnityEngine.Tilemaps;
 
 namespace Assets.Scripts.Tiles
 {
-    public abstract class GameTile : Tile
+    public abstract class AbstractGameTile : Tile
     {
         public Sprite[] Sprites { get; }
 

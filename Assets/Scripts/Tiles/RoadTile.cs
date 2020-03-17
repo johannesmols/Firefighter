@@ -10,7 +10,7 @@ using UnityEngine.Tilemaps;
 
 namespace Assets.Scripts.Tiles
 {
-    class RoadTile : GameTile
+    class RoadTile : AbstractGameTile
     {
         public RoadTile()
         {
