@@ -96,4 +96,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Tilemap: {fileID: 0}
-  UnitType: 0
+  UnitType: 2
+  TilePosition: {x: 0, y: 0, z: 0}
+  ActionPoints: 0
+  ObjectTransform: {fileID: 0}

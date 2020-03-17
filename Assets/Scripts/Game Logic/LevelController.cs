@@ -15,16 +15,11 @@ public class LevelController : MonoBehaviour
     public Tilemap tilemap;
     public List<AbstractUnit> playerUnits;
 
-    private List<Vector3Int> tilesInWorldSpace;
     private int currentlySelectedUnit = 0;
 
     public void Start()
     {
-        if (tilemap != null)
-        {
-            tilesInWorldSpace = TilemapHelper.GetTileCoordinates(tilemap);
-        }
-        else
+        if (tilemap == null)
         {
             Debug.LogError("No tilemap assigned to the Level Controller");
         }
@@ -34,8 +29,18 @@ public class LevelController : MonoBehaviour
     {
         playerUnits.RemoveAll(item => item == null); // remove destroyed units
 
+        // Change unit selection
+        if (Input.GetMouseButtonDown(1))
+        {
+            var clickedCell = tilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            var unitsOnThatCell = playerUnits.Where(unit => unit.TilePosition == clickedCell && unit.ActionPoints > 0).ToList();
+            if (unitsOnThatCell.Count > 0)
+            {
+                currentlySelectedUnit = playerUnits.IndexOf(unitsOnThatCell.First());
+            }
+        }
         // Movement
-        if (Input.GetMouseButtonDown(0))
+        else if (Input.GetMouseButtonDown(0))
         {
             if (playerUnits.Count > 0)
             {
@@ -54,23 +59,22 @@ public class LevelController : MonoBehaviour
                     }
                 }
 
-                if (cellInFringe >= 0)
+                if (cellInFringe >= 0 && !playerUnits.Any(unit => unit.TilePosition == clickedCell))
                 {
                     currentUnit.ActionPoints -= cellInFringe;
                     currentUnit.TilePosition = clickedCell;
                     currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
 
+                    // Select next unit, no AP remaining
                     if (currentUnit.ActionPoints == 0)
                     {
-                        Debug.Log("Action points for unit " + currentUnit + " exhausted, moving on to the next");
-
-                        if (currentlySelectedUnit < playerUnits.Count - 1)
+                        var nextUnit = playerUnits.Where(unit => unit.ActionPoints > 0).ToList();
+                        if (nextUnit.Count > 0)
                         {
-                            currentlySelectedUnit++;
+                            currentlySelectedUnit = playerUnits.IndexOf(nextUnit.First());
                         }
                         else
                         {
-                            currentlySelectedUnit = 0;
                             UpdateTiles();
                         }
                     }
