@@ -5,18 +5,19 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
-namespace Assets.Scripts.Tiles {
-public class GoalTile : GameTile
+namespace Assets.Scripts.Tiles 
 {
-        public GoalTile()
-        {
-            TileProperties = new TileProperties
+    public class GoalTile : AbstractGameTile
+    {
+            public GoalTile()
             {
-                IsMovable = false,
-                IsFlammable = true,
-                IsGoal = true
-            };
-        }
+                TileProperties = new TileProperties
+                {
+                    IsMovable = false,
+                    IsFlammable = true,
+                    IsGoal = true
+                };
+            }
 
 #if UNITY_EDITOR
         [MenuItem("Assets/Create/Tiles/Goal Tiles")]

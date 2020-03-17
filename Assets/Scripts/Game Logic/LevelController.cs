@@ -14,8 +14,8 @@ public class LevelController : MonoBehaviour
     public bool DynamicFireSpread = true; // todo
     public Tilemap tilemap;
     public List<AbstractUnit> playerUnits;
-    public bool gameOver = false;
 
+    private bool gameOver = false;
     private List<Vector3Int> tilesInWorldSpace;
     private int currentlySelectedUnit = 0;
 
@@ -78,10 +78,6 @@ public class LevelController : MonoBehaviour
     /// </summary>
     private void UpdateTiles()
     {
-        if(isGameOver(tiles)) {
-            return;
-        }
-        
         var tiles = new Dictionary<System.Type, List<Vector3Int>>
         {
             { typeof(FireTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is FireTile).ToList() },
@@ -90,6 +86,11 @@ public class LevelController : MonoBehaviour
             { typeof(ObstacleTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is ObstacleTile).ToList() },
             { typeof(GoalTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is GoalTile).ToList() }
         };
+
+        if (IsGameOver(tiles))
+        {
+            return;
+        }
 
         SpreadFire(tiles);
         ResetActionPoints();
@@ -115,11 +116,12 @@ public class LevelController : MonoBehaviour
         }
     }
 
-    private Boolean isGameOver(Dictionary<System.Type, List<Vector3Int>> tiles) {
-        if(tiles[typeof(GoalTile)].Count == 0) {
-            gameOver = true;
+    private bool IsGameOver(Dictionary<System.Type, List<Vector3Int>> tiles) {
+        if (tiles[typeof(GoalTile)].Count == 0) 
+        {
+            return true;
         }
-        return gameOver;
+        return false;
     }
 
     private void ResetActionPoints()
