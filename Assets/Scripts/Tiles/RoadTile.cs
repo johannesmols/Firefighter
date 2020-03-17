@@ -17,6 +17,7 @@ namespace Assets.Scripts.Tiles
             TileProperties = new TileProperties
             {
                 IsMovable = true,
+                MovementCost = 1,
                 IsFlammable = true,
                 IsGoal = false
             };

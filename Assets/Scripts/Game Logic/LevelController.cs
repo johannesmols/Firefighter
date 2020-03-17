@@ -37,6 +37,9 @@ public class LevelController : MonoBehaviour
             if (unitsOnThatCell.Count > 0)
             {
                 currentlySelectedUnit = playerUnits.IndexOf(unitsOnThatCell.First());
+
+                var currentUnit = playerUnits.Find(a => a == unitsOnThatCell.First());
+                Debug.Log("Changed selection to " + currentUnit.name + ", " + currentUnit.ActionPoints + " AP left");
             }
         }
         // Movement
@@ -50,18 +53,23 @@ public class LevelController : MonoBehaviour
                 var reachableTiles = TilemapHelper.FindReachableTiles(currentUnit.TilePosition, currentUnit.ActionPoints, tilemap);
 
                 int cellInFringe = -1;
+                Tuple<Vector3Int, int> targetTile = null;
                 for (int fringe = 0; fringe < reachableTiles.Count; fringe++)
                 {
-                    if (reachableTiles[fringe].Contains(clickedCell))
+                    var reachableTile = reachableTiles[fringe].Where(tile => tile.Item1 == clickedCell).ToList();
+                    if (reachableTile.Count > 0)
                     {
+                        targetTile = reachableTile.First();
                         cellInFringe = fringe;
                         break;
                     }
                 }
 
-                if (cellInFringe >= 0 && !playerUnits.Any(unit => unit.TilePosition == clickedCell))
+                if (cellInFringe >= 0 && !playerUnits.Any(unit => unit.TilePosition == clickedCell) && currentUnit.ActionPoints >= targetTile?.Item2)
                 {
-                    currentUnit.ActionPoints -= cellInFringe;
+                    Debug.Log("Moved unit " + currentUnit.name + " from " + currentUnit.TilePosition + " to " + clickedCell + ", costing " + targetTile.Item2 + ". There are " + (currentUnit.ActionPoints - targetTile.Item2) + " AP left.");
+
+                    currentUnit.ActionPoints -= targetTile.Item2;
                     currentUnit.TilePosition = clickedCell;
                     currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
 
@@ -94,6 +102,8 @@ public class LevelController : MonoBehaviour
     /// </summary>
     private void UpdateTiles()
     {
+        Debug.Log("Started next round");
+
         var tiles = TilemapHelper.GetTileDictionary(tilemap);
 
         if (IsGameOver(tiles))
