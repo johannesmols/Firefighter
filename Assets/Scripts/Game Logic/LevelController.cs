@@ -53,6 +53,7 @@ public class LevelController : MonoBehaviour
                     }
                     else
                     {
+                        currentlySelectedUnit = 0;
                         UpdateTiles();
                     }
                 }
@@ -60,6 +61,7 @@ public class LevelController : MonoBehaviour
         }
         else if (Input.GetKeyDown("space"))
         {
+            currentlySelectedUnit = 0;
             UpdateTiles();
         }
     }
@@ -78,6 +80,7 @@ public class LevelController : MonoBehaviour
         };
 
         SpreadFire(tiles);
+        ResetActionPoints();
     }
 
     private void SpreadFire(Dictionary<System.Type, List<Vector3Int>> tiles)
@@ -97,6 +100,14 @@ public class LevelController : MonoBehaviour
                     }
                 }
             }
+        }
+    }
+
+    private void ResetActionPoints()
+    {
+        foreach (var playerUnit in playerUnits)
+        {
+            playerUnit.ResetActionPoints();
         }
     }
 }

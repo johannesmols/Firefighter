@@ -188,6 +188,11 @@ PrefabInstance:
       propertyPath: Tilemap
       value: 
       objectReference: {fileID: 1151161968}
+    - target: {fileID: 6339686638539392104, guid: 4ab621ada36aff944b3febbe104a62bb,
+        type: 3}
+      propertyPath: UnitType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6339686638539392107, guid: 4ab621ada36aff944b3febbe104a62bb,
         type: 3}
       propertyPath: m_Name
@@ -3303,6 +3308,11 @@ PrefabInstance:
       propertyPath: Tilemap
       value: 
       objectReference: {fileID: 1151161968}
+    - target: {fileID: 6339686638539392104, guid: 4ab621ada36aff944b3febbe104a62bb,
+        type: 3}
+      propertyPath: UnitType
+      value: 2
+      objectReference: {fileID: 0}
     - target: {fileID: 6339686638539392107, guid: 4ab621ada36aff944b3febbe104a62bb,
         type: 3}
       propertyPath: m_Name

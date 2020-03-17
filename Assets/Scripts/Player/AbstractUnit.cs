@@ -24,15 +24,10 @@ namespace Assets.Scripts.Player
         
         public void Start()
         {
-            // Assigning action points based on unit type
-            switch (UnitType)
-            {
-                case UnitType.Digger:
-                    ActionPoints = 2;
-                    break;
-            }
-
             ObjectTransform = GetComponent<Transform>();
+
+            // Assigning action points based on unit type
+            ResetActionPoints();
 
             if (Tilemap != null)
             {
@@ -57,6 +52,11 @@ namespace Assets.Scripts.Player
                 Debug.LogError("No tilemap defined for unit, destroying it");
                 Destroy(gameObject);
             }
+        }
+
+        public void ResetActionPoints()
+        {
+            ActionPoints = (int) UnitType;
         }
     }
 }
