@@ -10,28 +10,28 @@ using UnityEngine.Tilemaps;
 
 namespace Assets.Scripts.Tiles
 {
-    class RoadTile : GameTile
+    public class FireTile : GameTile
     {
-        public RoadTile()
+        public FireTile()
         {
             TileProperties = new TileProperties
             {
-                IsMovable = true,
-                IsFlammable = true,
+                IsMovable = false,
+                IsFlammable = false,
                 IsGoal = false
             };
         }
 
 #if UNITY_EDITOR
-        [MenuItem("Assets/Create/Tiles/Road Tile")]
-        public static void CreateRoadTile()
+        [MenuItem("Assets/Create/Tiles/Fire Tiles")]
+        public static void CreateFireTile()
         {
-            var path = EditorUtility.SaveFilePanelInProject("Save Road Tile", "New Road Tile", "asset",
-                "Save road tile", "Assets");
+            var path = EditorUtility.SaveFilePanelInProject("Save Fire Tile", "New Fire Tile", "asset",
+                "Save grass tile", "Assets");
 
             if (!string.IsNullOrWhiteSpace(path))
             {
-                AssetDatabase.CreateAsset(CreateInstance<RoadTile>(), path);
+                AssetDatabase.CreateAsset(CreateInstance<FireTile>(), path);
             }
         }
 #endif
