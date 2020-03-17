@@ -15,7 +15,6 @@ public class LevelController : MonoBehaviour
     public Tilemap tilemap;
     public List<AbstractUnit> playerUnits;
 
-    private bool gameOver = false;
     private List<Vector3Int> tilesInWorldSpace;
     private int currentlySelectedUnit = 0;
 
@@ -35,17 +34,29 @@ public class LevelController : MonoBehaviour
     {
         playerUnits.RemoveAll(item => item == null); // remove destroyed units
 
+        // Movement
         if (Input.GetMouseButtonDown(0))
         {
             if (playerUnits.Count > 0)
             {
                 var clickedCell = tilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
-                var clickedTile = (AbstractGameTile)tilemap.GetTile(clickedCell);
+                var clickedTile = (AbstractGameTile) tilemap.GetTile(clickedCell);
                 var currentUnit = playerUnits[currentlySelectedUnit];
-                var distance = TilemapHelper.GetDistanceBetweenTiles(currentUnit.TilePosition, clickedCell);
-                if (distance <= currentUnit.ActionPoints && clickedTile.TileProperties.IsMovable)
+                var reachableTiles = TilemapHelper.FindReachableTiles(currentUnit.TilePosition, currentUnit.ActionPoints, tilemap);
+
+                int cellInFringe = -1;
+                for (int fringe = 0; fringe < reachableTiles.Count; fringe++)
                 {
-                    currentUnit.ActionPoints -= distance;
+                    if (reachableTiles[fringe].Contains(clickedCell))
+                    {
+                        cellInFringe = fringe;
+                        break;
+                    }
+                }
+
+                if (cellInFringe >= 0)
+                {
+                    currentUnit.ActionPoints -= cellInFringe;
                     currentUnit.TilePosition = clickedCell;
                     currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
 
@@ -66,6 +77,7 @@ public class LevelController : MonoBehaviour
                 }
             }
         }
+        // Skip to next turn
         else if (Input.GetKeyDown("space"))
         {
             currentlySelectedUnit = 0;
@@ -78,14 +90,7 @@ public class LevelController : MonoBehaviour
     /// </summary>
     private void UpdateTiles()
     {
-        var tiles = new Dictionary<System.Type, List<Vector3Int>>
-        {
-            { typeof(FireTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is FireTile).ToList() },
-            { typeof(GrassTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is GrassTile).ToList() },
-            { typeof(RoadTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is RoadTile).ToList() },
-            { typeof(ObstacleTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is ObstacleTile).ToList() },
-            { typeof(GoalTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is GoalTile).ToList() }
-        };
+        var tiles = TilemapHelper.GetTileDictionary(tilemap);
 
         if (IsGameOver(tiles))
         {
@@ -101,7 +106,7 @@ public class LevelController : MonoBehaviour
     {
         foreach (var fireTile in tiles[typeof(FireTile)])
         {
-            var neighbors = TilemapHelper.FindNeighbors(fireTile, tiles);
+            var neighbors = TilemapHelper.FindNeighbors(fireTile, tilemap);
             var flammableNeighbors = new List<Vector3Int>();
             foreach (var neighborType in neighbors.Keys)
             {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Assets.Scripts.Tiles;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace Assets.Scripts.Helpers
 {
     public class TilemapHelper
     {
-        // Lookup table for even and odd rows. Hex coordinate systems are a fucking mess
+        // Lookup table for even and odd rows
         // https://www.redblobgames.com/grids/hexagons/#neighbors-offset
         public static readonly List<Tuple<int, int>> evenRowLookupTable = new List<Tuple<int, int>>
         {
@@ -35,25 +36,38 @@ namespace Assets.Scripts.Helpers
         /// <summary>
         /// Get a list of tile coordinates of all tiles in the tilemap
         /// </summary>
-        /// <param name="_tilemap">the tilemap</param>
+        /// <param name="tilemap">the tilemap</param>
         /// <returns>a list of coordinates of all tiles in the tilemap</returns>
-        public static List<Vector3Int> GetTileCoordinates(Tilemap _tilemap)
+        public static List<Vector3Int> GetTileCoordinates(Tilemap tilemap)
         {
             var tiles = new List<Vector3Int>();
-            for (int n = _tilemap.cellBounds.xMin; n < _tilemap.cellBounds.xMax; n++)
+            for (int n = tilemap.cellBounds.xMin; n < tilemap.cellBounds.xMax; n++)
             {
-                for (int p = _tilemap.cellBounds.yMin; p < _tilemap.cellBounds.yMax; p++)
+                for (int p = tilemap.cellBounds.yMin; p < tilemap.cellBounds.yMax; p++)
                 {
                     var localPlace = new Vector3Int(n, p, 0);
-                    var place = _tilemap.CellToWorld(localPlace);
-                    if (_tilemap.HasTile(localPlace))
+                    var place = tilemap.CellToWorld(localPlace);
+                    if (tilemap.HasTile(localPlace))
                     {
-                        tiles.Add(_tilemap.WorldToCell(place));
+                        tiles.Add(tilemap.WorldToCell(place));
                     }
                 }
             }
 
             return tiles;
+        }
+
+        public static Dictionary<System.Type, List<Vector3Int>> GetTileDictionary(Tilemap tilemap)
+        {
+            var tilesInWorldSpace = GetTileCoordinates(tilemap);
+            return new Dictionary<System.Type, List<Vector3Int>>
+            {
+                { typeof(FireTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is FireTile).ToList() },
+                { typeof(GrassTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is GrassTile).ToList() },
+                { typeof(RoadTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is RoadTile).ToList() },
+                { typeof(ObstacleTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is ObstacleTile).ToList() },
+                { typeof(GoalTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is GoalTile).ToList() }
+            };
         }
 
         public static bool IsEvenRow(Vector3Int coordinates)
@@ -83,6 +97,7 @@ namespace Assets.Scripts.Helpers
             return new Vector3Int(x, y, z);
         }
 
+        // Does not consider non-movable tiles (e.g. obstacles)
         // https://www.redblobgames.com/grids/hexagons/#distances-cube
         public static int GetDistanceBetweenTiles(Vector3Int a, Vector3Int b)
         {
@@ -91,14 +106,42 @@ namespace Assets.Scripts.Helpers
             return Mathf.Max(Math.Abs(a.x - b.x), Math.Abs(a.y - b.y), Math.Abs(a.z - b.z));
         }
 
+        // https://www.redblobgames.com/grids/hexagons/#range-obstacles
+        public static List<List<Vector3Int>> FindReachableTiles(Vector3Int startTile, int maxDistance, Tilemap tilemap)
+        {
+            var visited = new List<Vector3Int> { startTile };
+            var fringes = new List<List<Vector3Int>> { new List<Vector3Int> { startTile } };
+
+            for (int i = 1; i <= maxDistance; i++)
+            {
+                fringes.Add(new List<Vector3Int>());
+                foreach (var hex in fringes[i - 1])
+                {
+                    var neighbors = FindNeighbors(hex, tilemap);
+                    foreach (var neighbor in neighbors.SelectMany(n => n.Value))
+                    {
+                        var neighborTile = (AbstractGameTile) tilemap.GetTile(neighbor);
+                        if (!visited.Contains(neighbor) && neighborTile.TileProperties.IsMovable)
+                        {
+                            visited.Add(neighbor);
+                            fringes[i].Add(neighbor);
+                        }
+                    }
+                }
+            }
+
+            return fringes;
+        }
+
         /// <summary>
         /// Find all adjacent tiles to a tile
         /// </summary>
         /// <param name="tile">the tile in question</param>
         /// <param name="tiles">all tiles in the tilemap</param>
         /// <returns>a dictionary of neigboring tiles by type</returns>
-        public static Dictionary<System.Type, List<Vector3Int>> FindNeighbors(Vector3Int tile, Dictionary<System.Type, List<Vector3Int>> tiles)
+        public static Dictionary<System.Type, List<Vector3Int>> FindNeighbors(Vector3Int tile, Tilemap tilemap)
         {
+            var tiles = GetTileDictionary(tilemap);
             var neigbors = new Dictionary<System.Type, List<Vector3Int>>();
             foreach (var type in tiles.Keys)
             {
