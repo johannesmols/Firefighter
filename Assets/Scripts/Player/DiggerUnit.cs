@@ -11,39 +11,6 @@ namespace Assets.Scripts.Player
 {
     public class DiggerUnit : AbstractUnit
     {
-        private Transform objectTransform;
-
-        public void Start()
-        {
-            ActionPoints = 2;
-
-            objectTransform = GetComponent<Transform>();
-
-            if (Tilemap != null)
-            {
-                TilePosition = Tilemap.WorldToCell(objectTransform.position);
-                if (Tilemap.HasTile(TilePosition))
-                {
-                    var tile = (AbstractGameTile) Tilemap.GetTile(TilePosition);
-                    if (tile.TileProperties.IsMovable && !(tile is FireTile))
-                    {
-                        objectTransform.position = new Vector3(Tilemap.CellToWorld(TilePosition).x, 0, Tilemap.CellToWorld(TilePosition).z);
-                    }
-                    else
-                    {
-                        Debug.LogError("Placed unit on an unmovable tile or fire tile, destroying it");
-                        Destroy(gameObject);
-                    }
-                    
-                }
-            }
-            else
-            {
-                Debug.LogError("No tilemap defined for Digger unit, destroying it");
-                Destroy(gameObject);
-            }
-        }
-
         public void Update()
         {
             // Check if the unit was hit by fire

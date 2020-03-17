@@ -16,14 +16,51 @@ public class LevelController : MonoBehaviour
     public List<AbstractUnit> playerUnits;
 
     private List<Vector3Int> tilesInWorldSpace;
+    private int currentlySelectedUnit = 0;
 
     public void Start()
     {
         if (tilemap != null)
         {
             tilesInWorldSpace = TilemapHelper.GetTileCoordinates(tilemap);
+        }
+        else
+        {
+            Debug.LogError("No tilemap assigned to the Level Controller");
+        }
+    }
 
-            InvokeRepeating("UpdateTiles", 0, 1.0f);
+    public void Update()
+    {
+        if (Input.GetMouseButtonDown(0))
+        {
+            var clickedCell = tilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            var currentUnit = playerUnits[currentlySelectedUnit];
+            var distance = TilemapHelper.GetDistanceBetweenTiles(currentUnit.TilePosition, clickedCell);
+            if (distance <= currentUnit.ActionPoints)
+            {
+                currentUnit.ActionPoints -= distance;
+                currentUnit.TilePosition = clickedCell;
+                currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
+
+                if (currentUnit.ActionPoints == 0)
+                {
+                    Debug.Log("Action points for unit " + currentUnit + " exhausted, moving on to the next");
+
+                    if (currentlySelectedUnit < playerUnits.Count - 1)
+                    {
+                        currentlySelectedUnit++;
+                    }
+                    else
+                    {
+                        UpdateTiles();
+                    }
+                }
+            }
+        }
+        else if (Input.GetKeyDown("space"))
+        {
+            UpdateTiles();
         }
     }
 
@@ -62,6 +99,4 @@ public class LevelController : MonoBehaviour
             }
         }
     }
-
-    
 }

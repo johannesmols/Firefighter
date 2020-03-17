@@ -56,6 +56,41 @@ namespace Assets.Scripts.Helpers
             return tiles;
         }
 
+        public static bool IsEvenRow(Vector3Int coordinates)
+        {
+            return coordinates.y % 2 == 0;
+        }
+
+        // https://www.redblobgames.com/grids/hexagons/#conversions
+        public static Vector3Int ConvertOffsetToCubeCoordinates(Vector3Int offset)
+        {
+            int x, y, z;
+            if (IsEvenRow(offset))
+            {
+                x = offset.x - (offset.y + (offset.y & 1)) / 2;
+                z = offset.y;
+                y = -x - z;
+
+                
+            }
+            else
+            {
+                x = offset.x - (offset.y - (offset.y & 1)) / 2;
+                z = offset.y;
+                y = -x - z;
+            }
+
+            return new Vector3Int(x, y, z);
+        }
+
+        // https://www.redblobgames.com/grids/hexagons/#distances-cube
+        public static int GetDistanceBetweenTiles(Vector3Int a, Vector3Int b)
+        {
+            a = ConvertOffsetToCubeCoordinates(a);
+            b = ConvertOffsetToCubeCoordinates(b);
+            return Mathf.Max(Math.Abs(a.x - b.x), Math.Abs(a.y - b.y), Math.Abs(a.z - b.z));
+        }
+
         /// <summary>
         /// Find all adjacent tiles to a tile
         /// </summary>
@@ -64,7 +99,6 @@ namespace Assets.Scripts.Helpers
         /// <returns>a dictionary of neigboring tiles by type</returns>
         public static Dictionary<System.Type, List<Vector3Int>> FindNeighbors(Vector3Int tile, Dictionary<System.Type, List<Vector3Int>> tiles)
         {
-            var rowIsEven = tile.y % 2 == 0;
             var neigbors = new Dictionary<System.Type, List<Vector3Int>>();
             foreach (var type in tiles.Keys)
             {
@@ -75,7 +109,7 @@ namespace Assets.Scripts.Helpers
                     int x = tileWithType.x - tile.x;
                     int y = tileWithType.y - tile.y;
 
-                    if (rowIsEven)
+                    if (IsEvenRow(tile))
                     {
                         if (evenRowLookupTable.Contains(new Tuple<int, int>(x, y)))
                         {
