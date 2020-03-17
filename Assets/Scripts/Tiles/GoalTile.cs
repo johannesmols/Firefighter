@@ -12,9 +12,9 @@ public class GoalTile : GameTile
         {
             TileProperties = new TileProperties
             {
-                IsMovable = true,
+                IsMovable = false,
                 IsFlammable = true,
-                IsGoal = false
+                IsGoal = true
             };
         }
 
