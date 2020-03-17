@@ -7,7 +7,7 @@ using UnityEngine.Tilemaps;
 
 namespace Assets.Scripts.Tiles
 {
-    public class GrassTile : GameTile
+    public class GrassTile : AbstractGameTile
     {
         public GrassTile()
         {

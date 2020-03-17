@@ -10,7 +10,7 @@ using UnityEngine.Tilemaps;
 
 namespace Assets.Scripts.Tiles
 {
-    class ObstacleTile : GameTile
+    class ObstacleTile : AbstractGameTile
     {
         public ObstacleTile()
         {

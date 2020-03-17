@@ -1,4 +1,5 @@
-﻿using Assets.Scripts.Tiles;
+﻿using Assets.Scripts.Player;
+using Assets.Scripts.Tiles;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,9 +10,10 @@ using UnityEngine.Tilemaps;
 
 public class LevelController : MonoBehaviour
 {
-    public bool DynamicFireSpread = true;
+    public bool DynamicFireSpread = true; // todo
+    public Tilemap tilemap;
+    public List<AbstractUnit> playerUnits;
 
-    private Tilemap tilemap;
     private List<Vector3Int> tilesInWorldSpace;
 
     // Lookup table for even and odd rows. Hex coordinate systems are a fucking mess
@@ -38,10 +40,12 @@ public class LevelController : MonoBehaviour
 
     public void Start()
     {
-        tilemap = gameObject.GetComponent<Tilemap>();
-        tilesInWorldSpace = GetTileCoordinates(tilemap);
-        
-        InvokeRepeating("UpdateTiles", 0, 1.0f);
+        if (tilemap != null)
+        {
+            tilesInWorldSpace = GetTileCoordinates(tilemap);
+
+            InvokeRepeating("UpdateTiles", 0, 1.0f);
+        }
     }
 
     /// <summary>
@@ -70,7 +74,7 @@ public class LevelController : MonoBehaviour
             {
                 foreach (var neighbor in neighbors[neighborType])
                 {
-                    var tile = (GameTile) tilemap.GetTile(neighbor);
+                    var tile = (AbstractGameTile) tilemap.GetTile(neighbor);
                     if (tile.TileProperties.IsFlammable)
                     {
                         tilemap.SetTile(neighbor, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/FireTile.asset", typeof(FireTile)) as FireTile);
