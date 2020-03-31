@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 681118a1c566c4b488fc4b5caebc7354, type: 3}
   m_Name: BurntTile
   m_EditorClassIdentifier: 
-  m_Sprite: {fileID: -2271245413270476428, guid: 7044819b8d3713b4999f84b7c2771297,
+  m_Sprite: {fileID: -1334258534143388904, guid: 7044819b8d3713b4999f84b7c2771297,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Transform:

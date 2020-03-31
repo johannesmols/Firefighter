@@ -67,7 +67,8 @@ namespace Assets.Scripts.Helpers
                 { typeof(RoadTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is RoadTile).ToList() },
                 { typeof(ObstacleTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is ObstacleTile).ToList() },
                 { typeof(GoalTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is GoalTile).ToList() },
-                { typeof(TrenchTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is TrenchTile).ToList() }
+                { typeof(TrenchTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is TrenchTile).ToList() },
+                { typeof(BurntTile), tilesInWorldSpace.Where(t => tilemap.GetTile(t) is BurntTile).ToList() }
             };
         }
 
