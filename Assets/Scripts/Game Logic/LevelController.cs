@@ -16,7 +16,7 @@ public class LevelController : MonoBehaviour
     public Tilemap tilemap;
     public List<AbstractUnit> playerUnits;
 
-    private int currentlySelectedUnit = 0;
+    public int currentlySelectedUnit = 0;
     private bool isGameOver = false;
     private bool levelIsComplete = false;
 
