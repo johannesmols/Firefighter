@@ -129,7 +129,11 @@ public class LevelController : MonoBehaviour
                     var tile = (AbstractGameTile) tilemap.GetTile(neighbor);
                     if (tile.TileProperties.IsFlammable)
                     {
-                        tilemap.SetTile(neighbor, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/FireTile.asset", typeof(FireTile)) as FireTile);
+                        if(tile.TileProperties.IsGoal){
+                            tilemap.SetTile(neighbor, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/BurntTile.asset", typeof(BurntTile)) as BurntTile);
+                        } else {
+                            tilemap.SetTile(neighbor, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/FireTile.asset", typeof(FireTile)) as FireTile);
+                        }
                     }
                 }
             }
