@@ -17,6 +17,8 @@ public class LevelController : MonoBehaviour
     public List<AbstractUnit> playerUnits;
 
     private int currentlySelectedUnit = 0;
+    private bool isGameOver = false;
+    private bool levelIsComplete = false;
 
     public void Start()
     {
@@ -139,22 +141,21 @@ public class LevelController : MonoBehaviour
     /// </summary>
     private void UpdateTiles()
     {
-        Debug.Log("Started next round");
-
         var tiles = TilemapHelper.GetTileDictionary(tilemap);
 
-        if (IsGameOver(tiles))
+        if (!levelIsComplete && !isGameOver)
         {
-            Debug.Log("Game Over!");
-            return;
-        }
+            Debug.Log("Starting next round");
+            SpreadFire(tiles);
+            ResetActionPoints();
 
-        SpreadFire(tiles);
-        ResetActionPoints();
+            isGameOver = IsGameOver(TilemapHelper.GetTileDictionary(tilemap));
+        }
     }
 
     private void SpreadFire(Dictionary<System.Type, List<Vector3Int>> tiles)
     {
+        var newTilesOnFireCnt = 0;
         foreach (var fireTile in tiles[typeof(FireTile)])
         {
             var neighbors = TilemapHelper.FindNeighbors(fireTile, tilemap);
@@ -167,9 +168,16 @@ public class LevelController : MonoBehaviour
                     if (tile.TileProperties.IsFlammable)
                     {
                         tilemap.SetTile(neighbor, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/FireTile.asset", typeof(FireTile)) as FireTile);
+                        newTilesOnFireCnt++;
                     }
                 }
             }
+        }
+
+        if (newTilesOnFireCnt == 0)
+        {
+            levelIsComplete = true;
+            Debug.Log("Level complete, no fire can spread anymore");
         }
     }
 
@@ -198,6 +206,7 @@ public class LevelController : MonoBehaviour
     private bool IsGameOver(Dictionary<System.Type, List<Vector3Int>> tiles) {
         if (tiles[typeof(GoalTile)].Count == 0) 
         {
+            Debug.Log("Game over!");
             return true;
         }
         return false;
