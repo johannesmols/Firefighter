@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Helpers;
+using Assets.Scripts.Objects;
 using Assets.Scripts.Player;
 using Assets.Scripts.Tiles;
 using System;
@@ -89,6 +90,42 @@ public class LevelController : MonoBehaviour
                 }
             }
         }
+        else if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha2))
+        {
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[1], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha3))
+        {
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[2], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha4))
+        {
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[3], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha5))
+        {
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[4], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha6))
+        {
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[5], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha7))
+        {
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[6], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha8))
+        {
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[7], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha9))
+        {
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[8], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+        }
         // Skip to next turn
         else if (Input.GetKeyDown("space"))
         {
@@ -132,6 +169,28 @@ public class LevelController : MonoBehaviour
                         tilemap.SetTile(neighbor, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/FireTile.asset", typeof(FireTile)) as FireTile);
                     }
                 }
+            }
+        }
+    }
+
+    private void ExecuteAction(Tuple<string, int> action, UnitType unitType, AbstractUnit unit)
+    {
+        if (action != null)
+        {
+            switch(action.Item1)
+            {
+                case "dig_trench":
+                    if (unitType != UnitType.Digger)
+                        return;
+                    var standingOn = (AbstractGameTile) tilemap.GetTile(unit.TilePosition);
+                    if (unit.ActionPoints >= action.Item2 && standingOn.TileProperties.IsMovable && !standingOn.TileProperties.IsGoal && standingOn.TileProperties.IsFlammable)
+                    {
+                        tilemap.SetTile(unit.TilePosition, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/TrenchTile.asset", typeof(TrenchTile)) as TrenchTile);
+                        unit.ActionPoints -= action.Item2;
+
+                        Debug.Log("Placed trench on tile " + unit.TilePosition + ", costing " + action.Item2 + " APs. There are " + (unit.ActionPoints) + " AP left.");
+                    }
+                    break;
             }
         }
     }

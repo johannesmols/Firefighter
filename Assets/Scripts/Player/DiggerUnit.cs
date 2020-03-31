@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Helpers;
+using Assets.Scripts.Objects;
 using Assets.Scripts.Tiles;
 using System;
 using System.Collections.Generic;
@@ -11,6 +12,12 @@ namespace Assets.Scripts.Player
 {
     public class DiggerUnit : AbstractUnit
     {
+        public override void Start()
+        {
+            base.Start();
+            UnitActions[0] = new Tuple<string, int>("dig_trench", 2);
+        }
+
         public void Update()
         {
             // Check if the unit was hit by fire

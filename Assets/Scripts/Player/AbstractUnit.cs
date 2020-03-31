@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Helpers;
+using Assets.Scripts.Objects;
 using Assets.Scripts.Tiles;
 using System;
 using System.Collections.Generic;
@@ -21,8 +22,10 @@ namespace Assets.Scripts.Player
         public int ActionPoints;
         [HideInInspector]
         public Transform ObjectTransform;
-        
-        public void Start()
+        [HideInInspector]
+        public Tuple<string, int>[] UnitActions = new Tuple<string, int>[9];
+
+        public virtual void Start()
         {
             ObjectTransform = GetComponent<Transform>();
 
