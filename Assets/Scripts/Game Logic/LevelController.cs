@@ -158,6 +158,7 @@ public class LevelController : MonoBehaviour
         var newTilesOnFireCnt = 0;
         foreach (var fireTile in tiles[typeof(FireTile)])
         {
+            tilemap.SetTile(fireTile, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/BurntTile.asset", typeof(BurntTile)) as BurntTile);
             var neighbors = TilemapHelper.FindNeighbors(fireTile, tilemap);
             var flammableNeighbors = new List<Vector3Int>();
             foreach (var neighborType in neighbors.Keys)
@@ -168,6 +169,7 @@ public class LevelController : MonoBehaviour
                     if (tile.TileProperties.IsFlammable)
                     {
                         tilemap.SetTile(neighbor, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/FireTile.asset", typeof(FireTile)) as FireTile);
+                        // replace goal tile with burntGoalTile  
                         newTilesOnFireCnt++;
                     }
                 }
