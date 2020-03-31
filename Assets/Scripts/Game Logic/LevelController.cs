@@ -158,7 +158,7 @@ public class LevelController : MonoBehaviour
         var newTilesOnFireCnt = 0;
         foreach (var fireTile in tiles[typeof(FireTile)])
         {
-            tilemap.SetTile(fireTile, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/BurntTile.asset", typeof(BurntTile)) as BurntTile);
+            tilemap.SetTile(fireTile, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);
             var neighbors = TilemapHelper.FindNeighbors(fireTile, tilemap);
             var flammableNeighbors = new List<Vector3Int>();
             foreach (var neighborType in neighbors.Keys)
@@ -168,7 +168,7 @@ public class LevelController : MonoBehaviour
                     var tile = (AbstractGameTile) tilemap.GetTile(neighbor);
                     if (tile.TileProperties.IsFlammable)
                     {
-                        tilemap.SetTile(neighbor, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/FireTile.asset", typeof(FireTile)) as FireTile);
+                        tilemap.SetTile(neighbor, Resources.Load("FireTile", typeof(FireTile)) as FireTile);
                         // replace goal tile with burntGoalTile  
                         newTilesOnFireCnt++;
                     }
@@ -195,7 +195,7 @@ public class LevelController : MonoBehaviour
                     var standingOn = (AbstractGameTile) tilemap.GetTile(unit.TilePosition);
                     if (unit.ActionPoints >= action.Item2 && standingOn.TileProperties.IsMovable && !standingOn.TileProperties.IsGoal && standingOn.TileProperties.IsFlammable)
                     {
-                        tilemap.SetTile(unit.TilePosition, AssetDatabase.LoadAssetAtPath("Assets/PaletteTiles/TrenchTile.asset", typeof(TrenchTile)) as TrenchTile);
+                        tilemap.SetTile(unit.TilePosition, Resources.Load("TrenchTile", typeof(TrenchTile)) as TrenchTile);
                         unit.ActionPoints -= action.Item2;
 
                         Debug.Log("Placed trench on tile " + unit.TilePosition + ", costing " + action.Item2 + " APs. There are " + (unit.ActionPoints) + " AP left.");
