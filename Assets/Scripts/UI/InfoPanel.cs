@@ -28,6 +28,7 @@ public class InfoPanel : MonoBehaviour
             this.selectedUnit = levelController.currentlySelectedUnit;
             currentUnit = levelController.playerUnits[this.selectedUnit];
         }
+
         Transform unitTransform = currentUnit.ObjectTransform;
         portraitCamera.GetComponent<PortraitCameraController>().Show(unitTransform);
         actionPointsTextField.GetComponent<UnityEngine.UI.Text>().text = currentUnit.ActionPoints.ToString()+" / 4";
