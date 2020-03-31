@@ -77,18 +77,7 @@ public class LevelController : MonoBehaviour
                     currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
 
                     // Select next unit, no AP remaining
-                    if (currentUnit.ActionPoints == 0)
-                    {
-                        var nextUnit = playerUnits.Where(unit => unit.ActionPoints > 0).ToList();
-                        if (nextUnit.Count > 0)
-                        {
-                            currentlySelectedUnit = playerUnits.IndexOf(nextUnit.First());
-                        }
-                        else
-                        {
-                            UpdateTiles();
-                        }
-                    }
+                    ChooseNextUnitOrGoToNextRound();
                 }
             }
         }
@@ -153,6 +142,23 @@ public class LevelController : MonoBehaviour
         }
     }
 
+    private void ChooseNextUnitOrGoToNextRound()
+    {
+        var currentUnit = playerUnits[currentlySelectedUnit];
+        if (currentUnit.ActionPoints == 0)
+        {
+            var nextUnit = playerUnits.Where(unit => unit.ActionPoints > 0).ToList();
+            if (nextUnit.Count > 0)
+            {
+                currentlySelectedUnit = playerUnits.IndexOf(nextUnit.First());
+            }
+            else
+            {
+                UpdateTiles();
+            }
+        }
+    }
+
     private void SpreadFire(Dictionary<System.Type, List<Vector3Int>> tiles)
     {
         var newTilesOnFireCnt = 0;
@@ -203,6 +209,8 @@ public class LevelController : MonoBehaviour
                     break;
             }
         }
+
+        ChooseNextUnitOrGoToNextRound();
     }
 
     private bool IsGameOver(Dictionary<System.Type, List<Vector3Int>> tiles) {
