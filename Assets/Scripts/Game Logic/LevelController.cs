@@ -15,6 +15,7 @@ public class LevelController : MonoBehaviour
     public bool DynamicFireSpread = true; // todo
     public Tilemap tilemap;
     public List<AbstractUnit> playerUnits;
+    public GameObject UnitSelector;
 
     public int currentlySelectedUnit = 0;
     private bool isGameOver = false;
@@ -123,6 +124,8 @@ public class LevelController : MonoBehaviour
             currentlySelectedUnit = 0;
             UpdateTiles();
         }
+
+        UnitSelector.transform.position = playerUnits[currentlySelectedUnit].transform.position;
     }
 
     /// <summary>
