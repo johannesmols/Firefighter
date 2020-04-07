@@ -20,6 +20,7 @@ public class LevelController : MonoBehaviour
     public int currentlySelectedUnit = 0;
     private bool isGameOver = false;
     private bool levelIsComplete = false;
+    private bool isPutoutTriggered = false;
 
     public void Start()
     {
@@ -71,15 +72,23 @@ public class LevelController : MonoBehaviour
 
                 if (cellInFringe >= 0 && !playerUnits.Any(unit => unit.TilePosition == clickedCell) && currentUnit.ActionPoints >= targetTile?.Item2)
                 {
-                    Debug.Log("Moved unit " + currentUnit.name + " from " + currentUnit.TilePosition + " to " + clickedCell + ", costing " + targetTile.Item2 + ". There are " + (currentUnit.ActionPoints - targetTile.Item2) + " AP left.");
+                    if (!isPutoutTriggered)
+                    {
+                        Debug.Log("Moved unit " + currentUnit.name + " from " + currentUnit.TilePosition + " to " + clickedCell + ", costing " + targetTile.Item2 + ". There are " + (currentUnit.ActionPoints - targetTile.Item2) + " AP left.");
 
-                    currentUnit.ActionPoints -= targetTile.Item2;
-                    currentUnit.TilePosition = clickedCell;
-                    currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
+                        currentUnit.ActionPoints -= targetTile.Item2;
+                        currentUnit.TilePosition = clickedCell;
+                        currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
 
-                    // Select next unit, no AP remaining
-                    ChooseNextUnitOrGoToNextRound();
-                }
+                        // Select next unit, no AP remaining
+                        ChooseNextUnitOrGoToNextRound();
+                    } else if (isPutoutTriggered)
+                    {
+                       isPutoutTriggered = false;
+                       currentUnit.ActionPoints -= targetTile.Item2;
+                       tilemap.SetTile(clickedCell, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);                  
+                    }
+                }     
             }
         }
         else if (Input.GetKeyDown(KeyCode.Alpha1))
@@ -210,7 +219,18 @@ public class LevelController : MonoBehaviour
                         Debug.Log("Placed trench on tile " + unit.TilePosition + ", costing " + action.Item2 + " APs. There are " + (unit.ActionPoints) + " AP left.");
                     }
                     break;
+
+                case "putout_fire":
+                    if (unitType != UnitType.Firefighter)
+                        return;
+                    if (unit.ActionPoints >= action.Item2)
+                    {
+                        isPutoutTriggered = true;
+                    }
+                    break;
+
             }
+    
         }
 
         ChooseNextUnitOrGoToNextRound();
