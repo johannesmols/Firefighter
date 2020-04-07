@@ -135,6 +135,38 @@ namespace Assets.Scripts.Helpers
             return fringes;
         }
 
+        public static List<List<Tuple<Vector3Int, int>>> FindReachableFireTiles(Vector3Int startTile, int maxDistance, Tilemap tilemap)
+        {
+            var visited = new List<Vector3Int> { startTile };
+            var fringes = new List<List<Tuple<Vector3Int, int>>> { new List<Tuple<Vector3Int, int>> { new Tuple<Vector3Int, int>(startTile, 0) } };
+
+            for (int i = 1; i <= maxDistance; i++)
+            {
+                fringes.Add(new List<Tuple<Vector3Int, int>>());
+                foreach (var hex in fringes[i - 1])
+                {
+                    var neighbors = FindNeighbors(hex.Item1, tilemap);
+                    foreach (var neighbor in neighbors.SelectMany(n => n.Value))
+                    {
+                        var neighborTile = (AbstractGameTile) tilemap.GetTile(neighbor);
+                        if (!visited.Contains(neighbor) && (neighborTile.TileProperties.IsMovable || neighborTile is FireTile))
+                        {
+                            visited.Add(neighbor);
+                            fringes[i].Add(new Tuple<Vector3Int, int>(neighbor, hex.Item2 + neighborTile.TileProperties.MovementCost));
+                        }
+                    }
+                }
+            }
+
+            // Remove non-fire tiles
+            foreach (var fringe in fringes)
+            {
+                fringe.RemoveAll(item => ((AbstractGameTile) tilemap.GetTile(item.Item1)) is FireTile == false);
+            }
+
+            return fringes;
+        }
+
         /// <summary>
         /// Find all adjacent tiles to a tile
         /// </summary>

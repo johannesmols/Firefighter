@@ -207,6 +207,10 @@ public class LevelController : MonoBehaviour
                 case "dig_trench":
                     if (unitType != UnitType.Digger)
                         return;
+
+                    // Example to get all fire tiles within a 2 tile range, with regards to obstacles. Please remove after using it for fire trucks, firefighters, etc.
+                    //var fireTiles = TilemapHelper.FindReachableFireTiles(unit.TilePosition, 2, tilemap);
+
                     var standingOn = (AbstractGameTile) tilemap.GetTile(unit.TilePosition);
                     if (unit.ActionPoints >= action.Item2 && standingOn.TileProperties.IsMovable && !standingOn.TileProperties.IsGoal && standingOn.TileProperties.IsFlammable)
                     {
