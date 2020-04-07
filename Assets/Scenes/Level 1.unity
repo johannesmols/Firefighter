@@ -16881,36 +16881,38 @@ MonoBehaviour:
 
     Spacebar: Skip to the next round
 
+    WASD: Move camera
 
-    Action Points:
 
-    - Each digger
-    has 4 AP''s every round
+    Action
+    Points:
 
-    - Moving on a road costs 1 AP
+    - Each digger has 4 AP''s every round
 
-    - Moving on grass
-    costs 2 AP
+    - Moving on a road costs
+    1 AP
+
+    - Moving on grass costs 2 AP
 
     - Digging a trench costs 2 AP
 
 
     Actions:
 
-    - Number Button
-    1: Dig Trench (2 AP)
+    -
+    Number Button 1: Dig Trench (2 AP)
 
 
     Winning conditions:
 
-    - The fire can''t spread
-    any more and there is at least one goal remaining
+    - The fire
+    can''t spread any more and there is at least one goal remaining
 
 
-    Losing conditions:
+    Losing
+    conditions:
 
-    -
-    All goals have been burned'
+    - All goals have been burned'
 --- !u!222 &946303435
 CanvasRenderer:
   m_ObjectHideFlags: 0
