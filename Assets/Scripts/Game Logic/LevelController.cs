@@ -176,7 +176,13 @@ public class LevelController : MonoBehaviour
         var newTilesOnFireCnt = 0;
         foreach (var fireTile in tiles[typeof(FireTile)])
         {
-            tilemap.SetTile(fireTile, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);
+            var currentFireTile = (AbstractGameTile) tilemap.GetTile(fireTile);
+            currentFireTile.TileProperties.RoundsOnFire++;
+            if (currentFireTile.TileProperties.RoundsOnFire >= 1)
+            {
+                tilemap.SetTile(fireTile, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);
+            }
+
             var neighbors = TilemapHelper.FindNeighbors(fireTile, tilemap);
             var flammableNeighbors = new List<Vector3Int>();
             foreach (var neighborType in neighbors.Keys)
@@ -210,6 +216,10 @@ public class LevelController : MonoBehaviour
                 case "dig_trench":
                     if (unitType != UnitType.Digger)
                         return;
+
+                    // Example to get all fire tiles within a 2 tile range, with regards to obstacles. Please remove after using it for fire trucks, firefighters, etc.
+                    //var fireTiles = TilemapHelper.FindReachableFireTiles(unit.TilePosition, 2, tilemap);
+
                     var standingOn = (AbstractGameTile) tilemap.GetTile(unit.TilePosition);
                     if (unit.ActionPoints >= action.Item2 && standingOn.TileProperties.IsMovable && !standingOn.TileProperties.IsGoal && standingOn.TileProperties.IsFlammable)
                     {
