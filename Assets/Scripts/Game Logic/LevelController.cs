@@ -167,7 +167,13 @@ public class LevelController : MonoBehaviour
         var newTilesOnFireCnt = 0;
         foreach (var fireTile in tiles[typeof(FireTile)])
         {
-            tilemap.SetTile(fireTile, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);
+            var currentFireTile = (AbstractGameTile) tilemap.GetTile(fireTile);
+            currentFireTile.TileProperties.RoundsOnFire++;
+            if (currentFireTile.TileProperties.RoundsOnFire >= 1)
+            {
+                tilemap.SetTile(fireTile, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);
+            }
+
             var neighbors = TilemapHelper.FindNeighbors(fireTile, tilemap);
             var flammableNeighbors = new List<Vector3Int>();
             foreach (var neighborType in neighbors.Keys)

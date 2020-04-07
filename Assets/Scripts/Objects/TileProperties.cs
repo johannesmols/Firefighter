@@ -12,5 +12,6 @@ namespace Assets.Scripts.Objects
         public int MovementCost { get; set; }
         public bool IsFlammable { get; set; }
         public bool IsGoal { get; set; }
+        public int RoundsOnFire { get; set; }
     }
 }
