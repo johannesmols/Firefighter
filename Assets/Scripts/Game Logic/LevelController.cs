@@ -55,9 +55,12 @@ public class LevelController : MonoBehaviour
                 var clickedTile = (AbstractGameTile) tilemap.GetTile(clickedCell);
                 var currentUnit = playerUnits[currentlySelectedUnit];
                 var reachableTiles = TilemapHelper.FindReachableTiles(currentUnit.TilePosition, currentUnit.ActionPoints, tilemap);
+                var reachableFireTiles = TilemapHelper.FindReachableFireTiles(currentUnit.TilePosition, currentUnit.ActionPoints, tilemap);
 
                 int cellInFringe = -1;
+                int fireCellInFringe = -1;
                 Tuple<Vector3Int, int> targetTile = null;
+                Tuple<Vector3Int, int> targetFireTile = null;
                 for (int fringe = 0; fringe < reachableTiles.Count; fringe++)
                 {
                     var reachableTile = reachableTiles[fringe].Where(tile => tile.Item1 == clickedCell).ToList();
@@ -68,17 +71,27 @@ public class LevelController : MonoBehaviour
                         break;
                     }
                 }
-
-                if (cellInFringe >= 0 && !playerUnits.Any(unit => unit.TilePosition == clickedCell) && currentUnit.ActionPoints >= targetTile?.Item2)
+                for (int fringe = 0; fringe < reachableFireTiles.Count; fringe++)
                 {
-                    Debug.Log("Moved unit " + currentUnit.name + " from " + currentUnit.TilePosition + " to " + clickedCell + ", costing " + targetTile.Item2 + ". There are " + (currentUnit.ActionPoints - targetTile.Item2) + " AP left.");
+                    
+                    var reachableFireTile = reachableFireTiles[fringe].Where(tile => tile.Item1 == clickedCell).ToList();
+                    if (reachableFireTile.Count > 0)
+                    {
+                        targetFireTile = reachableFireTile.First();
+                        fireCellInFringe = fringe;
+                        break;
+                    }
+                }
 
-                    currentUnit.ActionPoints -= targetTile.Item2;
-                    currentUnit.TilePosition = clickedCell;
-                    currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
+                if (cellInFringe >= 0 && !playerUnits.Any(unit => unit.TilePosition == clickedCell) && (currentUnit.ActionPoints >= targetTile?.Item2 || currentUnit.ActionPoints >= targetFireTile?.Item2))
+                {
+                        Debug.Log("Moved unit " + currentUnit.name + " from " + currentUnit.TilePosition + " to " + clickedCell + ", costing " + targetTile.Item2 + ". There are " + (currentUnit.ActionPoints - targetTile.Item2) + " AP left.");
+                        currentUnit.ActionPoints -= targetTile.Item2;
+                        currentUnit.TilePosition = clickedCell;
+                        currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
 
-                    // Select next unit, no AP remaining
-                    ChooseNextUnitOrGoToNextRound();
+                        // Select next unit, no AP remaining
+                        ChooseNextUnitOrGoToNextRound();
                 }
             }
         }
@@ -205,22 +218,73 @@ public class LevelController : MonoBehaviour
             switch(action.Item1)
             {
                 case "dig_trench":
-                    if (unitType != UnitType.Digger)
-                        return;
-
-                    // Example to get all fire tiles within a 2 tile range, with regards to obstacles. Please remove after using it for fire trucks, firefighters, etc.
-                    //var fireTiles = TilemapHelper.FindReachableFireTiles(unit.TilePosition, 2, tilemap);
-
-                    var standingOn = (AbstractGameTile) tilemap.GetTile(unit.TilePosition);
-                    if (unit.ActionPoints >= action.Item2 && standingOn.TileProperties.IsMovable && !standingOn.TileProperties.IsGoal && standingOn.TileProperties.IsFlammable)
                     {
-                        tilemap.SetTile(unit.TilePosition, Resources.Load("TrenchTile", typeof(TrenchTile)) as TrenchTile);
-                        unit.ActionPoints -= action.Item2;
+                        if (unitType != UnitType.Digger)
+                            return;
 
-                        Debug.Log("Placed trench on tile " + unit.TilePosition + ", costing " + action.Item2 + " APs. There are " + (unit.ActionPoints) + " AP left.");
+                        var standingOn = (AbstractGameTile)tilemap.GetTile(unit.TilePosition);
+                        if (unit.ActionPoints >= action.Item2 && standingOn.TileProperties.IsMovable && !standingOn.TileProperties.IsGoal && standingOn.TileProperties.IsFlammable)
+                        {
+                            tilemap.SetTile(unit.TilePosition, Resources.Load("TrenchTile", typeof(TrenchTile)) as TrenchTile);
+                            unit.ActionPoints -= action.Item2;
+
+                            Debug.Log("Placed trench on tile " + unit.TilePosition + ", costing " + action.Item2 + " APs. There are " + (unit.ActionPoints) + " AP left.");
+                        }
                     }
                     break;
+                case "extinguish_fire":
+                    {
+                        if (unitType != UnitType.FireTruck)
+                            return;
+
+                        var burned = 0;
+                        var fireTilesInRange = TilemapHelper.FindReachableFireTiles(unit.TilePosition, 2, tilemap);
+                        if (unit.ActionPoints >= action.Item2)
+                        {
+                            for (int i = 1; i < fireTilesInRange.Count; i++)
+                            {
+                                foreach (var tile in fireTilesInRange[i])
+                                {
+                                    tilemap.SetTile(tile.Item1, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);
+                                    burned++;
+                                }
+                            }
+
+                            if (burned > 0)
+                            {
+                                unit.ActionPoints -= action.Item2;
+                            }
+                        }
+                    }
+                    break;
+                case "putout_fire":
+                    {
+                        if (unitType != UnitType.Firefighter)
+                            return;
+
+                        var burned = 0;
+                        var fireTilesInRange = TilemapHelper.FindReachableFireTiles(unit.TilePosition, 1, tilemap);
+                        if (unit.ActionPoints >= action.Item2)
+                        {
+                            for (int i = 1; i < fireTilesInRange.Count; i++)
+                            {
+                                foreach (var tile in fireTilesInRange[i])
+                                {
+                                    tilemap.SetTile(tile.Item1, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);
+                                    burned++;
+                                }
+                            }
+
+                            if (burned > 0)
+                            {
+                                unit.ActionPoints -= action.Item2;
+                            }
+                        }
+                    }
+                    break;
+
             }
+    
         }
 
         ChooseNextUnitOrGoToNextRound();
