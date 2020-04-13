@@ -11,7 +11,7 @@ namespace Assets.Scripts.Player
     public enum UnitType
     {
         Digger = 4,
-        FireTruck = 4
+        FireTruck = 4,
         Firefighter = 4
     }
 }

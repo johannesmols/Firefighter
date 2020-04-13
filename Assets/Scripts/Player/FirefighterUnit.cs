@@ -16,6 +16,7 @@ namespace Assets.Scripts.Player
         {
             base.Start();
             UnitActions[0] = new Tuple<string, int>("putout_fire", 2);
+            UnitType = UnitType.Firefighter;
         }
 
         // Update is called once per frame
