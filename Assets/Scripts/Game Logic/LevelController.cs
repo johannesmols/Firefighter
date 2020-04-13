@@ -20,7 +20,6 @@ public class LevelController : MonoBehaviour
     public int currentlySelectedUnit = 0;
     private bool isGameOver = false;
     private bool levelIsComplete = false;
-    private bool isPutoutTriggered = false;
 
     public void Start()
     {
@@ -87,7 +86,6 @@ public class LevelController : MonoBehaviour
                 if (cellInFringe >= 0 && !playerUnits.Any(unit => unit.TilePosition == clickedCell) && (currentUnit.ActionPoints >= targetTile?.Item2 || currentUnit.ActionPoints >= targetFireTile?.Item2))
                 {
                         Debug.Log("Moved unit " + currentUnit.name + " from " + currentUnit.TilePosition + " to " + clickedCell + ", costing " + targetTile.Item2 + ". There are " + (currentUnit.ActionPoints - targetTile.Item2) + " AP left.");
-                        Debug.Log(reachableFireTiles.Count.ToString());
                         currentUnit.ActionPoints -= targetTile.Item2;
                         currentUnit.TilePosition = clickedCell;
                         currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
