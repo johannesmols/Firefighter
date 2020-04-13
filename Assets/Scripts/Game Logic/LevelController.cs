@@ -244,6 +244,13 @@ public class LevelController : MonoBehaviour
                         Debug.Log("Placed trench on tile " + unit.TilePosition + ", costing " + action.Item2 + " APs. There are " + (unit.ActionPoints) + " AP left.");
                     }
                     break;
+                case "extinguish_fire":
+                    if (unitType != UnitType.FireTruck)
+                        return;
+
+                    var fireTilesInRange = TilemapHelper.FindReachableFireTiles(unit.TilePosition, 2, tilemap);
+                    // extinguish fire if clicked on one of them
+                    break;
 
                 case "putout_fire":
                     if (unitType != UnitType.Firefighter)

@@ -135,6 +135,8 @@ namespace Assets.Scripts.Helpers
             return fringes;
         }
 
+        // Slightly modified version of FindReachableTiles that allows FireTiles to be included in the search, and removes any non-fire tiles at the end
+        // https://www.redblobgames.com/grids/hexagons/#range-obstacles
         public static List<List<Tuple<Vector3Int, int>>> FindReachableFireTiles(Vector3Int startTile, int maxDistance, Tilemap tilemap)
         {
             var visited = new List<Vector3Int> { startTile };
