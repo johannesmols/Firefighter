@@ -18,15 +18,5 @@ namespace Assets.Scripts.Player
             UnitActions[0] = new Tuple<string, int>("putout_fire", 2);
             UnitType = UnitType.Firefighter;
         }
-
-        // Update is called once per frame
-        public void Update()
-        {
-            var fireTiles = TilemapHelper.GetTileCoordinates(Tilemap).Where(t => Tilemap.GetTile(t) is FireTile).ToList();
-            if(fireTiles.Contains(TilePosition))
-            {
-                Destroy(gameObject);
-            }
-        }
     }
 }

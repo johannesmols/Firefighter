@@ -16,6 +16,7 @@ public class LevelController : MonoBehaviour
     public Tilemap tilemap;
     public List<AbstractUnit> playerUnits;
     public GameObject UnitSelector;
+    public AudioController audioController;
 
     public int currentlySelectedUnit = 0;
     private bool isGameOver = false;
@@ -27,6 +28,8 @@ public class LevelController : MonoBehaviour
         {
             Debug.LogError("No tilemap assigned to the Level Controller");
         }
+
+        audioController.PlayMissionStartSound();
     }
 
     public void Update()
@@ -34,7 +37,7 @@ public class LevelController : MonoBehaviour
         playerUnits.RemoveAll(item => item == null); // remove destroyed units
 
         // Change unit selection
-        if (Input.GetMouseButtonDown(1))
+        if (Input.GetMouseButtonDown(0))
         {
             var clickedCell = tilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
             var unitsOnThatCell = playerUnits.Where(unit => unit.TilePosition == clickedCell && unit.ActionPoints > 0).ToList();
@@ -44,10 +47,11 @@ public class LevelController : MonoBehaviour
 
                 var currentUnit = playerUnits.Find(a => a == unitsOnThatCell.First());
                 Debug.Log("Changed selection to " + currentUnit.name + ", " + currentUnit.ActionPoints + " AP left");
+                audioController.PlayUnitChooseSound();
             }
         }
         // Movement
-        else if (Input.GetMouseButtonDown(0))
+        else if (Input.GetMouseButtonDown(1))
         {
             if (playerUnits.Count > 0)
             {
@@ -89,6 +93,8 @@ public class LevelController : MonoBehaviour
                         currentUnit.ActionPoints -= targetTile.Item2;
                         currentUnit.TilePosition = clickedCell;
                         currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
+
+                        audioController.PlayUnitMoveSound();
 
                         // Select next unit, no AP remaining
                         ChooseNextUnitOrGoToNextRound();
@@ -167,6 +173,7 @@ public class LevelController : MonoBehaviour
             if (nextUnit.Count > 0)
             {
                 currentlySelectedUnit = playerUnits.IndexOf(nextUnit.First());
+                //audioController.PlayUnitChooseSound();
             }
             else
             {
@@ -208,6 +215,11 @@ public class LevelController : MonoBehaviour
         {
             levelIsComplete = true;
             Debug.Log("Level complete, no fire can spread anymore");
+            audioController.PlayMissionSuccessSound();
+        }
+        else
+        {
+            audioController.PlayFireSpreadSound();
         }
     }
 
@@ -227,6 +239,8 @@ public class LevelController : MonoBehaviour
                         {
                             tilemap.SetTile(unit.TilePosition, Resources.Load("TrenchTile", typeof(TrenchTile)) as TrenchTile);
                             unit.ActionPoints -= action.Item2;
+
+                            audioController.PlayDigTrenchSound();
 
                             Debug.Log("Placed trench on tile " + unit.TilePosition + ", costing " + action.Item2 + " APs. There are " + (unit.ActionPoints) + " AP left.");
                         }
@@ -294,6 +308,7 @@ public class LevelController : MonoBehaviour
         if (tiles[typeof(GoalTile)].Count == 0) 
         {
             Debug.Log("Game over!");
+            audioController.PlayMissionFailSound();
             return true;
         }
         return false;
