@@ -103,39 +103,39 @@ public class LevelController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit], playerUnits[currentlySelectedUnit].UnitProperties);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit], playerUnits[currentlySelectedUnit].UnitProperties);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit], playerUnits[currentlySelectedUnit].UnitProperties);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit], playerUnits[currentlySelectedUnit].UnitProperties);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit], playerUnits[currentlySelectedUnit].UnitProperties);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit], playerUnits[currentlySelectedUnit].UnitProperties);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit], playerUnits[currentlySelectedUnit].UnitProperties);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit], playerUnits[currentlySelectedUnit].UnitProperties);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit], playerUnits[currentlySelectedUnit].UnitProperties);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         // Skip to next turn
         else if (Input.GetKeyDown("space"))
@@ -223,7 +223,7 @@ public class LevelController : MonoBehaviour
         }
     }
 
-    private void ExecuteAction(Tuple<string, int> action, UnitType unitType, AbstractUnit unit, UnitProperties unitProperties)
+    private void ExecuteAction(Tuple<string, int> action, UnitType unitType, AbstractUnit unit)
     {
         if (action != null)
         {
@@ -252,7 +252,7 @@ public class LevelController : MonoBehaviour
                             return;
 
                         var extinguished = 0;
-                        var fireTilesInRange = TilemapHelper.FindReachableFireTiles(unit.TilePosition, unitProperties.reachableFire, tilemap);
+                        var fireTilesInRange = TilemapHelper.FindReachableFireTiles(unit.TilePosition, unit.ReachableFire, tilemap);
                         if (unit.ActionPoints >= action.Item2)
                         {
                             for (int i = 1; i < fireTilesInRange.Count; i++)

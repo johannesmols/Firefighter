@@ -11,18 +11,13 @@ namespace Assets.Scripts.Player
 {
     public class FirefighterUnit : AbstractUnit
     {
-        public FirefighterUnit(){
-            UnitProperties = new UnitProperties
-            {
-                reachableFire = 1
-            };
-        }
         // Start is called before the first frame update
         public override void Start()
         {
             base.Start();
             UnitActions[0] = new Tuple<string, int>("extinguish_fire", 2);
             UnitType = UnitType.Firefighter;
+            ReachableFire = 1;
         }
     }
 }

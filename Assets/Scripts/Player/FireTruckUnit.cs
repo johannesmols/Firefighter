@@ -10,18 +10,12 @@ namespace Assets.Scripts.Player
 {
     public class FireTruckUnit : AbstractUnit
     {
-        public FireTruckUnit() {
-            UnitProperties = new UnitProperties
-            {
-                reachableFire = 2
-            };
-        }
         public override void Start()
         {
             base.Start();
             UnitActions[0] = new Tuple<string, int>("extinguish_fire", 4);
-            UnitProperties.reachableFire = 2;
             UnitType = UnitType.FireTruck;
+            ReachableFire = 2;
         }
     }
 }
