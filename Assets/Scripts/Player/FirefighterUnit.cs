@@ -15,8 +15,9 @@ namespace Assets.Scripts.Player
         public override void Start()
         {
             base.Start();
-            UnitActions[0] = new Tuple<string, int>("putout_fire", 2);
+            UnitActions[0] = new Tuple<string, int>("extinguish_fire", 2);
             UnitType = UnitType.Firefighter;
+            ReachableFire = 1;
         }
     }
 }

@@ -107,35 +107,35 @@ public class LevelController : MonoBehaviour
         }
         else if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[1], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[2], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha4))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[3], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha5))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[4], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha6))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[5], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha7))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[6], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha8))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[7], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         else if (Input.GetKeyDown(KeyCode.Alpha9))
         {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[8], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
+            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
         // Skip to next turn
         else if (Input.GetKeyDown("space"))
@@ -248,11 +248,11 @@ public class LevelController : MonoBehaviour
                     break;
                 case "extinguish_fire":
                     {
-                        if (unitType != UnitType.FireTruck)
+                        if (unitType != UnitType.FireTruck && unitType != UnitType.Firefighter)
                             return;
 
                         var extinguished = 0;
-                        var fireTilesInRange = TilemapHelper.FindReachableFireTiles(unit.TilePosition, 2, tilemap);
+                        var fireTilesInRange = TilemapHelper.FindReachableFireTiles(unit.TilePosition, unit.ReachableFire, tilemap);
                         if (unit.ActionPoints >= action.Item2)
                         {
                             for (int i = 1; i < fireTilesInRange.Count; i++)
@@ -272,33 +272,6 @@ public class LevelController : MonoBehaviour
                         }
                     }
                     break;
-                case "putout_fire":
-                    {
-                        if (unitType != UnitType.Firefighter)
-                            return;
-
-                        var extinguished = 0;
-                        var fireTilesInRange = TilemapHelper.FindReachableFireTiles(unit.TilePosition, 1, tilemap);
-                        if (unit.ActionPoints >= action.Item2)
-                        {
-                            for (int i = 1; i < fireTilesInRange.Count; i++)
-                            {
-                                foreach (var tile in fireTilesInRange[i])
-                                {
-                                    tilemap.SetTile(tile.Item1, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);
-                                    extinguished++;
-                                }
-                            }
-
-                            if (extinguished > 0)
-                            {
-                                unit.ActionPoints -= action.Item2;
-                                audioController.PlayExtinguishFireSound();
-                            }
-                        }
-                    }
-                    break;
-
             }
     
         }

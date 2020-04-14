@@ -16,7 +16,6 @@ namespace Assets.Scripts.Player
         public Tilemap Tilemap;
         public LevelController levelController;
         public UnitType UnitType;
-
         [HideInInspector]
         public Vector3Int TilePosition;
         [HideInInspector]
@@ -25,6 +24,8 @@ namespace Assets.Scripts.Player
         public Transform ObjectTransform;
         [HideInInspector]
         public Tuple<string, int>[] UnitActions = new Tuple<string, int>[9];
+        [HideInInspector]
+        public int ReachableFire;
 
         private AudioController audioController;
 
