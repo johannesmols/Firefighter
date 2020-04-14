@@ -253,7 +253,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: d036ce06787876943a0314fed68e7d60, type: 3}
   - {fileID: 8300000, guid: 19001cc92e56a254d89bde1fb5330fcf, type: 3}
   exinguishFire:
-  - {fileID: 0}
+  - {fileID: 8300000, guid: 4f3e226d694c48c43976b9f89daff337, type: 3}
+  - {fileID: 8300000, guid: 72f68d7aa8865ed4b924310051061813, type: 3}
+  - {fileID: 8300000, guid: a8fbe3f04f218b0419b0dc0deff988f4, type: 3}
+  - {fileID: 8300000, guid: c0691192d2b0bde41aaa03a1c84eb243, type: 3}
   missionStart:
   - {fileID: 8300000, guid: 2dfebe3ab51c59a48b51842a5e77b826, type: 3}
   - {fileID: 8300000, guid: dcbdf93decb346043b834d1f003d902c, type: 3}
