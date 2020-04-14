@@ -251,7 +251,7 @@ public class LevelController : MonoBehaviour
                         if (unitType != UnitType.FireTruck)
                             return;
 
-                        var burned = 0;
+                        var extinguished = 0;
                         var fireTilesInRange = TilemapHelper.FindReachableFireTiles(unit.TilePosition, 2, tilemap);
                         if (unit.ActionPoints >= action.Item2)
                         {
@@ -260,13 +260,14 @@ public class LevelController : MonoBehaviour
                                 foreach (var tile in fireTilesInRange[i])
                                 {
                                     tilemap.SetTile(tile.Item1, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);
-                                    burned++;
+                                    extinguished++;
                                 }
                             }
 
-                            if (burned > 0)
+                            if (extinguished > 0)
                             {
                                 unit.ActionPoints -= action.Item2;
+                                audioController.PlayExtinguishFireSound();
                             }
                         }
                     }
@@ -276,7 +277,7 @@ public class LevelController : MonoBehaviour
                         if (unitType != UnitType.Firefighter)
                             return;
 
-                        var burned = 0;
+                        var extinguished = 0;
                         var fireTilesInRange = TilemapHelper.FindReachableFireTiles(unit.TilePosition, 1, tilemap);
                         if (unit.ActionPoints >= action.Item2)
                         {
@@ -285,13 +286,14 @@ public class LevelController : MonoBehaviour
                                 foreach (var tile in fireTilesInRange[i])
                                 {
                                     tilemap.SetTile(tile.Item1, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);
-                                    burned++;
+                                    extinguished++;
                                 }
                             }
 
-                            if (burned > 0)
+                            if (extinguished > 0)
                             {
                                 unit.ActionPoints -= action.Item2;
+                                audioController.PlayExtinguishFireSound();
                             }
                         }
                     }

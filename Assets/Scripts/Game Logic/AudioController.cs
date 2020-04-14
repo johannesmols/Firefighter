@@ -13,6 +13,7 @@ public class AudioController : MonoBehaviour
     public List<AudioClip> unitDeath;
     public List<AudioClip> unitMove;
     public List<AudioClip> diggerTrench;
+    public List<AudioClip> exinguishFire;
     public List<AudioClip> missionStart;
     public List<AudioClip> missionFail;
     public List<AudioClip> missionSuccess;
@@ -58,6 +59,11 @@ public class AudioController : MonoBehaviour
     public void PlayDigTrenchSound()
     {
         audioSource.PlayOneShot(diggerTrench[random.Next(diggerTrench.Count)]);
+    }
+
+    public void PlayExtinguishFireSound()
+    {
+        audioSource.PlayOneShot(exinguishFire[random.Next(diggerTrench.Count)]);
     }
 
     public void PlayFireSpreadSound()
