@@ -16,7 +16,7 @@ namespace Assets.Scripts.Player
         public Tilemap Tilemap;
         public LevelController levelController;
         public UnitType UnitType;
-
+        public UnitProperties UnitProperties { get; set; }
         [HideInInspector]
         public Vector3Int TilePosition;
         [HideInInspector]
