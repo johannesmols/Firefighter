@@ -19095,6 +19095,11 @@ PrefabInstance:
       propertyPath: audioController
       value: 
       objectReference: {fileID: 16982739}
+    - target: {fileID: 8351407173821722490, guid: f8eb07486dbf0b248b291ef5bcd7ae59,
+        type: 3}
+      propertyPath: playerUnits.Array.data[4]
+      value: 
+      objectReference: {fileID: 769089278}
     - target: {fileID: 8351407173821722491, guid: f8eb07486dbf0b248b291ef5bcd7ae59,
         type: 3}
       propertyPath: m_Name
