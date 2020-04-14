@@ -14,6 +14,7 @@ namespace Assets.Scripts.Player
     public abstract class AbstractUnit : MonoBehaviour
     {
         public Tilemap Tilemap;
+        public LevelController levelController;
         public UnitType UnitType;
 
         [HideInInspector]
@@ -25,9 +26,12 @@ namespace Assets.Scripts.Player
         [HideInInspector]
         public Tuple<string, int>[] UnitActions = new Tuple<string, int>[9];
 
+        private AudioController audioController;
+
         public virtual void Start()
         {
             ObjectTransform = GetComponent<Transform>();
+            audioController = levelController.GetComponent<AudioController>();
 
             // Assigning action points based on unit type
             ResetActionPoints();
@@ -53,6 +57,17 @@ namespace Assets.Scripts.Player
             else
             {
                 Debug.LogError("No tilemap defined for unit, destroying it");
+                Destroy(gameObject);
+            }
+        }
+
+        // Update is called once per frame
+        public void Update()
+        {
+            var fireTiles = TilemapHelper.GetTileCoordinates(Tilemap).Where(t => Tilemap.GetTile(t) is FireTile).ToList();
+            if (fireTiles.Contains(TilePosition))
+            {
+                audioController.PlayUnitDeathSound();
                 Destroy(gameObject);
             }
         }
