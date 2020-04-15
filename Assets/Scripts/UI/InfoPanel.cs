@@ -32,6 +32,6 @@ public class InfoPanel : MonoBehaviour
         Transform unitTransform = currentUnit.ObjectTransform;
         portraitCamera.GetComponent<PortraitCameraController>().Show(unitTransform);
         actionPointsTextField.GetComponent<UnityEngine.UI.Text>().text = currentUnit.ActionPoints.ToString()+" / 4";
-        nameTextField.GetComponent<UnityEngine.UI.Text>().text = currentUnit.UnitType.ToString();
+        nameTextField.GetComponent<UnityEngine.UI.Text>().text = currentUnit.name.ToString();
     }
 }
