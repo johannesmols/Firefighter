@@ -27,12 +27,12 @@ public class CursorFollow : MonoBehaviour
         //float height = textGen.GetPreferredHeight(textBox.text, generationSettings);
         //tooltip.sizeDelta = new Vector2(width+10, height+10);
 
-        if(Input.mousePosition.x+tooltip.rect.width + offsetX> Screen.width ){
+        if(Input.mousePosition.x > Screen.width/2 ){
             horizontal = -1;
         }else{
             horizontal = 1;
         }
-        if(Input.mousePosition.y+tooltip.rect.height + offsetY> Screen.height ){
+        if(Input.mousePosition.y > Screen.height/2 ){
             vertical = -1;
         }else{
             vertical = 1;

@@ -1065,7 +1065,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1247433899}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8351407173821722490, guid: f8eb07486dbf0b248b291ef5bcd7ae59,
+          type: 3}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1001 &409384634
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -17234,7 +17246,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Go back to Main Menu
+            m_StringArgument: Settings
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 1239887390}
@@ -17560,7 +17572,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 331760087}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 8351407173821722490, guid: f8eb07486dbf0b248b291ef5bcd7ae59,
+          type: 3}
+        m_MethodName: 
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!1 &723900052
 GameObject:
   m_ObjectHideFlags: 0
@@ -17880,7 +17904,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Go back to Main Menu
+            m_StringArgument: Help
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 1239887390}
@@ -19062,7 +19086,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   myCanvas: {fileID: 1031217586}
   tooltip: {fileID: 1239887391}
-  offsetX: -100
+  offsetX: 100
   offsetY: 100
 --- !u!1 &1247433897
 GameObject:
@@ -19963,6 +19987,16 @@ PrefabInstance:
       propertyPath: playerUnits.Array.data[4]
       value: 
       objectReference: {fileID: 769089278}
+    - target: {fileID: 8351407173821722490, guid: f8eb07486dbf0b248b291ef5bcd7ae59,
+        type: 3}
+      propertyPath: specialMoveButton
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8351407173821722490, guid: f8eb07486dbf0b248b291ef5bcd7ae59,
+        type: 3}
+      propertyPath: nextTurnButton
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8351407173821722491, guid: f8eb07486dbf0b248b291ef5bcd7ae59,
         type: 3}
       propertyPath: m_Name
@@ -20367,7 +20401,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Go back to Main Menu
+            m_StringArgument: Main menu
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 1239887390}
