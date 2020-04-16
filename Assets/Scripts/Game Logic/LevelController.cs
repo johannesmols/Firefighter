@@ -12,7 +12,7 @@ using UnityEngine.Tilemaps;
 
 public class LevelController : MonoBehaviour
 {
-    public bool dynamicFireSpread = true; // todo
+    public bool dynamicFireSpread = true;
     public Tilemap tilemap;
     public List<AbstractUnit> playerUnits;
     public GameObject UnitSelector;
@@ -169,7 +169,8 @@ public class LevelController : MonoBehaviour
                 if (reachableNeighbors.Count >= 2)
                 {
                     var possibleTilesToSpreadTo = reachableNeighbors[1];
-                    var spreadToThisManyTiles = (possibleTilesToSpreadTo.Count - 1) / 2 + 1; // divide by two, but round up
+                    var spreadToThisManyTiles = (int) Math.Ceiling(possibleTilesToSpreadTo.Count * 0.66f);
+                    //var spreadToThisManyTiles = (possibleTilesToSpreadTo.Count - 1) / 2 + 1; // divide by two, but round up
                     var spreadTo = possibleTilesToSpreadTo.OrderBy(x => random.Next()).Take(spreadToThisManyTiles); // randomly choose elements from list
                     foreach (var tile in spreadTo)
                     {

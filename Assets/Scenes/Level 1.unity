@@ -20013,6 +20013,11 @@ PrefabInstance:
       propertyPath: nextTurnButton
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8351407173821722490, guid: f8eb07486dbf0b248b291ef5bcd7ae59,
+        type: 3}
+      propertyPath: dynamicFireSpread
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 8351407173821722491, guid: f8eb07486dbf0b248b291ef5bcd7ae59,
         type: 3}
       propertyPath: m_Name
