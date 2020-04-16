@@ -994,7 +994,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Go back to Main Menu
+            m_StringArgument: Skip to the next round
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 1239887390}
@@ -21343,6 +21343,8 @@ MonoBehaviour:
   nameTextField: {fileID: 1874309277}
   actionPointsTextField: {fileID: 1055629894}
   specialMoveTextField: {fileID: 1058421683}
+  actionButton: {fileID: 644211492}
+  nextRoundButton: {fileID: 404312286}
   portraitCamera: {fileID: 1734503589}
 --- !u!1 &1874309277
 GameObject:

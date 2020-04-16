@@ -105,38 +105,6 @@ public class LevelController : MonoBehaviour
         {
             ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
         // Skip to next turn
         else if (Input.GetKeyDown("space"))
         {
@@ -150,7 +118,7 @@ public class LevelController : MonoBehaviour
     /// <summary>
     /// Update the tilemap according to specific rules (e.g. firespread)
     /// </summary>
-    private void UpdateTiles()
+    public void UpdateTiles()
     {
         var tiles = TilemapHelper.GetTileDictionary(tilemap);
 
@@ -223,7 +191,7 @@ public class LevelController : MonoBehaviour
         }
     }
 
-    private void ExecuteAction(Tuple<string, int, string> action, UnitType unitType, AbstractUnit unit)
+    public void ExecuteAction(Tuple<string, int, string> action, UnitType unitType, AbstractUnit unit)
     {
         if (action != null)
         {
