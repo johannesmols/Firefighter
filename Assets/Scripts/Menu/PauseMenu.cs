@@ -46,6 +46,8 @@ public class PauseMenu : MonoBehaviour
     public void Restart()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Pause(); // somehow, WASD didn't work after restarting, but this fixes it for some reason
+        Resume();
     }
     public void QuitGame()
     {
