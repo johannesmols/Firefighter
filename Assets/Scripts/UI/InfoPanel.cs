@@ -8,6 +8,7 @@ public class InfoPanel : MonoBehaviour
     private LevelController levelController;
     public GameObject nameTextField;
     public GameObject actionPointsTextField;
+    public GameObject specialMoveTextField;
     private int selectedUnit;
     public GameObject portraitCamera;
     private AbstractUnit currentUnit;
@@ -33,5 +34,7 @@ public class InfoPanel : MonoBehaviour
         portraitCamera.GetComponent<PortraitCameraController>().Show(unitTransform);
         actionPointsTextField.GetComponent<UnityEngine.UI.Text>().text = currentUnit.ActionPoints.ToString() + " / " + (int) currentUnit.UnitType;
         nameTextField.GetComponent<UnityEngine.UI.Text>().text = currentUnit.name.ToString();
+
+        specialMoveTextField.GetComponent<UnityEngine.UI.Text>().text = string.Format("Cost: {0} Action Points\n\n{1}", currentUnit.UnitActions?[0].Item2, currentUnit.UnitActions?[0].Item3);
     }
 }

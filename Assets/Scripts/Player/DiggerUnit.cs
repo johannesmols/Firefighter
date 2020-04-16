@@ -15,7 +15,7 @@ namespace Assets.Scripts.Player
         public override void Start()
         {
             base.Start();
-            UnitActions[0] = new Tuple<string, int>("dig_trench", 2);
+            UnitActions[0] = new Tuple<string, int, string>("dig_trench", 2, "Turn the tile that the digger is standing on into a trench. Fire cannot spread through it.");
             UnitType = UnitType.Digger;
             ActionPoints = (int) UnitType.Digger;
         }

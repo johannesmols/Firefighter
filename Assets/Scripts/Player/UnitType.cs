@@ -10,8 +10,8 @@ namespace Assets.Scripts.Player
     // The integer value is the number of available action points for this unit
     public enum UnitType
     {
-        Digger = 5,
-        FireTruck = 3,
-        Firefighter = 2
+        Digger = 4,
+        FireTruck = 4,
+        Firefighter = 4
     }
 }

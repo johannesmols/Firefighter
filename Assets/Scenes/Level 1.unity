@@ -21342,6 +21342,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   nameTextField: {fileID: 1874309277}
   actionPointsTextField: {fileID: 1055629894}
+  specialMoveTextField: {fileID: 1058421683}
   portraitCamera: {fileID: 1734503589}
 --- !u!1 &1874309277
 GameObject:
@@ -21630,7 +21631,7 @@ PrefabInstance:
     - target: {fileID: 6339686638539392107, guid: 4ab621ada36aff944b3febbe104a62bb,
         type: 3}
       propertyPath: m_Name
-      value: Digger2
+      value: Digger 2
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6339686638539392105, guid: 4ab621ada36aff944b3febbe104a62bb, type: 3}
@@ -21725,7 +21726,7 @@ PrefabInstance:
     - target: {fileID: 6339686638539392107, guid: 4ab621ada36aff944b3febbe104a62bb,
         type: 3}
       propertyPath: m_Name
-      value: Digger1
+      value: Digger 1
       objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6339686638539392105, guid: 4ab621ada36aff944b3febbe104a62bb, type: 3}
@@ -22277,7 +22278,7 @@ PrefabInstance:
     - target: {fileID: 4648510026063353214, guid: b7fe24f1e2c0d0c4eab769bbcd001193,
         type: 3}
       propertyPath: m_Name
-      value: Firefighter1
+      value: Firefighter
       objectReference: {fileID: 0}
     - target: {fileID: 8564028884885956461, guid: b7fe24f1e2c0d0c4eab769bbcd001193,
         type: 3}
@@ -22346,7 +22347,7 @@ PrefabInstance:
     - target: {fileID: 2770247783406951243, guid: 6a50a1d9b06c4f54ca29f563e2753af2,
         type: 3}
       propertyPath: m_Name
-      value: FireTruck1
+      value: Fire Truck
       objectReference: {fileID: 0}
     - target: {fileID: 2770247783407372139, guid: 6a50a1d9b06c4f54ca29f563e2753af2,
         type: 3}
