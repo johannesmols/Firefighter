@@ -17246,7 +17246,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Settings
+            m_StringArgument: You and I both know you have no need for settings
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 1239887390}
@@ -19321,6 +19321,7 @@ GameObject:
   - component: {fileID: 1337847056}
   - component: {fileID: 1337847058}
   - component: {fileID: 1337847057}
+  - component: {fileID: 1337847059}
   m_Layer: 5
   m_Name: LCornerMenu
   m_TagString: Untagged
@@ -19386,6 +19387,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1337847055}
   m_CullTransparentMesh: 0
+--- !u!114 &1337847059
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1337847055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0676d5894a0007a46ac27b2585c9d351, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  menuButton: {fileID: 1588152921}
+  settingsButton: {fileID: 540194523}
+  helpButton: {fileID: 934192307}
 --- !u!114 &1352344147 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6339686638539392104, guid: 4ab621ada36aff944b3febbe104a62bb,
