@@ -17953,7 +17953,7 @@ GameObject:
   - component: {fileID: 946303435}
   - component: {fileID: 946303434}
   m_Layer: 5
-  m_Name: Text
+  m_Name: Controls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -21839,7 +21839,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 1251, y: -44.8}
+  m_AnchoredPosition: {x: 1251, y: -44.80005}
   m_SizeDelta: {x: 378.4, y: 955.7}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &2060766783
@@ -22267,7 +22267,7 @@ PrefabInstance:
     - target: {fileID: 3720886071682550898, guid: b7fe24f1e2c0d0c4eab769bbcd001193,
         type: 3}
       propertyPath: UnitType
-      value: 4
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3720886071682550898, guid: b7fe24f1e2c0d0c4eab769bbcd001193,
         type: 3}

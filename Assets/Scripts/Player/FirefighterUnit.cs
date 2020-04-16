@@ -17,6 +17,7 @@ namespace Assets.Scripts.Player
             base.Start();
             UnitActions[0] = new Tuple<string, int>("extinguish_fire", 2);
             UnitType = UnitType.Firefighter;
+            ActionPoints = (int)UnitType.Firefighter;
             ReachableFire = 1;
         }
     }

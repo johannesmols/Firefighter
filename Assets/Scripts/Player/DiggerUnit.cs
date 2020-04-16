@@ -17,6 +17,7 @@ namespace Assets.Scripts.Player
             base.Start();
             UnitActions[0] = new Tuple<string, int>("dig_trench", 2);
             UnitType = UnitType.Digger;
+            ActionPoints = (int) UnitType.Digger;
         }
     }
 }
