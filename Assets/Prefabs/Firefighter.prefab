@@ -59,11 +59,11 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -9201970878562248228, guid: 28084bd4a1817ee4599023d0d2a2c0bd, type: 3}
-  - {fileID: 8945711921577302162, guid: 28084bd4a1817ee4599023d0d2a2c0bd, type: 3}
-  - {fileID: -2886261885951862949, guid: 28084bd4a1817ee4599023d0d2a2c0bd, type: 3}
-  - {fileID: 1671328474960422194, guid: 28084bd4a1817ee4599023d0d2a2c0bd, type: 3}
-  - {fileID: -2909795801659426547, guid: 28084bd4a1817ee4599023d0d2a2c0bd, type: 3}
+  - {fileID: 2100000, guid: 16970b3a2ae1d06488a538e5332e7d92, type: 2}
+  - {fileID: 2100000, guid: abe4c5370f0b71e46817cc5417a6c41e, type: 2}
+  - {fileID: 2100000, guid: e60bb6024581250459475beb5190246d, type: 2}
+  - {fileID: 2100000, guid: 150b264c2de1556448958e708fe8cb55, type: 2}
+  - {fileID: 2100000, guid: 60118642bc49e09499e4cee2fdb2b22f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -97,7 +97,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Tilemap: {fileID: 0}
+  levelController: {fileID: 0}
   UnitType: 0
   TilePosition: {x: 0, y: 0, z: 0}
   ActionPoints: 0
   ObjectTransform: {fileID: 0}
+  ReachableFire: 0

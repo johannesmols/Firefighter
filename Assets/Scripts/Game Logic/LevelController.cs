@@ -12,7 +12,7 @@ using UnityEngine.Tilemaps;
 
 public class LevelController : MonoBehaviour
 {
-    public bool DynamicFireSpread = true; // todo
+    public bool dynamicFireSpread = true;
     public Tilemap tilemap;
     public List<AbstractUnit> playerUnits;
     public GameObject UnitSelector;
@@ -21,6 +21,7 @@ public class LevelController : MonoBehaviour
     public int currentlySelectedUnit = 0;
     private bool isGameOver = false;
     private bool levelIsComplete = false;
+    private System.Random random = new System.Random();
 
     public void Start()
     {
@@ -105,42 +106,10 @@ public class LevelController : MonoBehaviour
         {
             ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
         }
-        else if (Input.GetKeyDown(KeyCode.Alpha2))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha4))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha5))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha6))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha7))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha8))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha9))
-        {
-            ExecuteAction(playerUnits[currentlySelectedUnit].UnitActions[0], playerUnits[currentlySelectedUnit].UnitType, playerUnits[currentlySelectedUnit]);
-        }
         // Skip to next turn
         else if (Input.GetKeyDown("space"))
         {
-            currentlySelectedUnit = 0;
+            //currentlySelectedUnit = 0;
             UpdateTiles();
         }
 
@@ -150,14 +119,14 @@ public class LevelController : MonoBehaviour
     /// <summary>
     /// Update the tilemap according to specific rules (e.g. firespread)
     /// </summary>
-    private void UpdateTiles()
+    public void UpdateTiles()
     {
         var tiles = TilemapHelper.GetTileDictionary(tilemap);
 
         if (!levelIsComplete && !isGameOver)
         {
             Debug.Log("Starting next round");
-            SpreadFire(tiles);
+            SpreadFire(tiles, dynamicFireSpread);
             ResetActionPoints();
 
             isGameOver = IsGameOver(TilemapHelper.GetTileDictionary(tilemap));
@@ -182,7 +151,7 @@ public class LevelController : MonoBehaviour
         }
     }
 
-    private void SpreadFire(Dictionary<System.Type, List<Vector3Int>> tiles)
+    private void SpreadFire(Dictionary<System.Type, List<Vector3Int>> tiles, bool dynamicSpread)
     {
         var newTilesOnFireCnt = 0;
         foreach (var fireTile in tiles[typeof(FireTile)])
@@ -194,18 +163,40 @@ public class LevelController : MonoBehaviour
                 tilemap.SetTile(fireTile, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);
             }
 
-            var neighbors = TilemapHelper.FindNeighbors(fireTile, tilemap);
-            var flammableNeighbors = new List<Vector3Int>();
-            foreach (var neighborType in neighbors.Keys)
+            if (dynamicSpread)
             {
-                foreach (var neighbor in neighbors[neighborType])
+                var reachableNeighbors = TilemapHelper.FindReachableTiles(fireTile, 1, tilemap);
+                if (reachableNeighbors.Count >= 2)
                 {
-                    var tile = (AbstractGameTile) tilemap.GetTile(neighbor);
-                    if (tile.TileProperties.IsFlammable)
+                    var possibleTilesToSpreadTo = reachableNeighbors[1];
+                    var spreadToThisManyTiles = (int) Math.Ceiling(possibleTilesToSpreadTo.Count * 0.66f);
+                    //var spreadToThisManyTiles = (possibleTilesToSpreadTo.Count - 1) / 2 + 1; // divide by two, but round up
+                    var spreadTo = possibleTilesToSpreadTo.OrderBy(x => random.Next()).Take(spreadToThisManyTiles); // randomly choose elements from list
+                    foreach (var tile in spreadTo)
                     {
-                        tilemap.SetTile(neighbor, Resources.Load("FireTile", typeof(FireTile)) as FireTile);
-                        // replace goal tile with burntGoalTile  
-                        newTilesOnFireCnt++;
+                        var actualTile = (AbstractGameTile) tilemap.GetTile(tile.Item1);
+                        if (actualTile.TileProperties.IsFlammable)
+                        {
+                            tilemap.SetTile(tile.Item1, Resources.Load("FireTile", typeof(FireTile)) as FireTile);
+                            newTilesOnFireCnt++;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                var neighbors = TilemapHelper.FindNeighbors(fireTile, tilemap);
+                foreach (var neighborType in neighbors.Keys)
+                {
+                    foreach (var neighbor in neighbors[neighborType])
+                    {
+                        var tile = (AbstractGameTile)tilemap.GetTile(neighbor);
+                        if (tile.TileProperties.IsFlammable)
+                        {
+                            tilemap.SetTile(neighbor, Resources.Load("FireTile", typeof(FireTile)) as FireTile);
+                            // replace goal tile with burntGoalTile  
+                            newTilesOnFireCnt++;
+                        }
                     }
                 }
             }
@@ -223,7 +214,7 @@ public class LevelController : MonoBehaviour
         }
     }
 
-    private void ExecuteAction(Tuple<string, int> action, UnitType unitType, AbstractUnit unit)
+    public void ExecuteAction(Tuple<string, int, string> action, UnitType unitType, AbstractUnit unit)
     {
         if (action != null)
         {
