@@ -18,13 +18,14 @@ public class LevelController : MonoBehaviour
     public List<AbstractUnit> playerUnits;
     public GameObject UnitSelector;
     public AudioController audioController;
+    public Camera mainCamera;
 
     public int currentlySelectedUnit = 0;
     private bool isGameOver = false;
     private bool levelIsComplete = false;
     private System.Random random = new System.Random();
 
-    private List<String> levelOrder = new List<string>() { "Tutorial", "Level 1", "Level 2" };
+    private readonly List<string> levelOrder = new List<string>() { "Tutorial", "Level 1", "Level 2" };
 
     public void Start()
     {
@@ -34,6 +35,8 @@ public class LevelController : MonoBehaviour
         }
 
         audioController.PlayMissionStartSound();
+
+        mainCamera.transform.position = new Vector3(playerUnits[currentlySelectedUnit].transform.position.x, mainCamera.transform.position.y, playerUnits[currentlySelectedUnit].transform.position.z);
     }
 
     public void Update()
@@ -54,6 +57,7 @@ public class LevelController : MonoBehaviour
                 currentlySelectedUnit = playerUnits.IndexOf(unitsOnThatCell.First());
 
                 var currentUnit = playerUnits.Find(a => a == unitsOnThatCell.First());
+
                 Debug.Log("Changed selection to " + currentUnit.name + ", " + currentUnit.ActionPoints + " AP left");
                 audioController.PlayUnitChooseSound();
             }
@@ -156,6 +160,8 @@ public class LevelController : MonoBehaviour
             if (nextUnit.Count > 0)
             {
                 currentlySelectedUnit = playerUnits.IndexOf(nextUnit.First());
+                StartCoroutine(LerpCameraTo(mainCamera.transform.position, new Vector3(nextUnit.First().transform.position.x, mainCamera.transform.position.y, nextUnit.First().transform.position.z), 0.5f, 0.5f));
+                
                 //audioController.PlayUnitChooseSound();
             }
             else
@@ -327,5 +333,17 @@ public class LevelController : MonoBehaviour
         {
             SceneManager.LoadScene("Startmenu");
         }
+    }
+
+    IEnumerator LerpCameraTo(Vector3 pos1, Vector3 pos2, float duration, float delay)
+    {
+        yield return new WaitForSecondsRealtime(delay);
+
+        for (float t = 0f; t < duration; t += Time.deltaTime)
+        {
+            mainCamera.transform.position = Vector3.Lerp(pos1, pos2, t / duration);
+            yield return 0;
+        }
+        mainCamera.transform.position = pos2;
     }
 }

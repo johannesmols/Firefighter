@@ -20018,6 +20018,11 @@ PrefabInstance:
       propertyPath: dynamicFireSpread
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8351407173821722490, guid: f8eb07486dbf0b248b291ef5bcd7ae59,
+        type: 3}
+      propertyPath: mainCamera
+      value: 
+      objectReference: {fileID: 1549053674}
     - target: {fileID: 8351407173821722491, guid: f8eb07486dbf0b248b291ef5bcd7ae59,
         type: 3}
       propertyPath: m_Name
@@ -20093,6 +20098,12 @@ CanvasRenderer:
 --- !u!1 &1549053673 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 58177122431529872, guid: a4fb3e30d91133e419820d7f0769e6ed,
+    type: 3}
+  m_PrefabInstance: {fileID: 157865364}
+  m_PrefabAsset: {fileID: 0}
+--- !u!20 &1549053674 stripped
+Camera:
+  m_CorrespondingSourceObject: {fileID: 58177122431529874, guid: a4fb3e30d91133e419820d7f0769e6ed,
     type: 3}
   m_PrefabInstance: {fileID: 157865364}
   m_PrefabAsset: {fileID: 0}
