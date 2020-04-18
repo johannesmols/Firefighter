@@ -19,6 +19,7 @@ public class LevelController : MonoBehaviour
     public GameObject UnitSelector;
     public GameObject RangeDisplayHelper;
     public GameObject GrassProps;
+    public GameObject BurnedProps;
     public AudioController audioController;
     public Camera mainCamera;
 
@@ -30,6 +31,7 @@ public class LevelController : MonoBehaviour
     private bool calledRangeDisplayHelperOnce = false;
 
     private List<Tuple<Vector3Int, GameObject>> grassPropsList = new List<Tuple<Vector3Int, GameObject>>();
+    private List<Tuple<Vector3Int, GameObject>> burnedPropsList = new List<Tuple<Vector3Int, GameObject>>();
 
     private readonly List<string> levelOrder = new List<string>() { "Tutorial", "Level 1", "Level 2", "Level 3" };
 
@@ -375,13 +377,29 @@ public class LevelController : MonoBehaviour
                 {
                     if (grassPropsList.Count == 0 || !grassPropsList.Any(i => i.Item1 == tile))
                     {
-                        var randomProp = UnityEngine.Random.Range(1, 4); // random prop 1-2 (2 is excluded)
+                        var randomProp = UnityEngine.Random.Range(1, 4); // random prop 1-4 (4 is excluded)
                         var newProp = Instantiate(Resources.Load("Forest/ForestProps" + randomProp), GrassProps.transform) as GameObject;
                         var cellPos = tilemap.CellToWorld(tile);
                         newProp.transform.position = new Vector3(cellPos.x, newProp.transform.position.y, cellPos.z);
                         newProp.transform.eulerAngles = new Vector3(newProp.transform.rotation.x, UnityEngine.Random.Range(0f, 360f), newProp.transform.rotation.z);
 
                         grassPropsList.Add(new Tuple<Vector3Int, GameObject>(tile, newProp));
+                    }
+                }
+            }
+            else if (tileType == typeof(BurntTile))
+            {
+                foreach (var tile in tilesWithType)
+                {
+                    if (burnedPropsList.Count == 0 || !burnedPropsList.Any(i => i.Item1 == tile))
+                    {
+                        var randomProp = UnityEngine.Random.Range(1, 3); // random prop 1-3 (3 is excluded)
+                        var newProp = Instantiate(Resources.Load("Burned/BurnedProps" + randomProp), BurnedProps.transform) as GameObject;
+                        var cellPos = tilemap.CellToWorld(tile);
+                        newProp.transform.position = new Vector3(cellPos.x, newProp.transform.position.y, cellPos.z);
+                        newProp.transform.eulerAngles = new Vector3(newProp.transform.rotation.x, UnityEngine.Random.Range(0f, 360f), newProp.transform.rotation.z);
+
+                        burnedPropsList.Add(new Tuple<Vector3Int, GameObject>(tile, newProp));
                     }
                 }
             }
