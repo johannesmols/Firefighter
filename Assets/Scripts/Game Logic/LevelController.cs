@@ -1,4 +1,4 @@
-﻿using Assets.Scripts.Helpers;
+using Assets.Scripts.Helpers;
 using Assets.Scripts.Objects;
 using Assets.Scripts.Player;
 using Assets.Scripts.Tiles;
@@ -36,6 +36,10 @@ public class LevelController : MonoBehaviour
     public void Update()
     {
         playerUnits.RemoveAll(item => item == null); // remove destroyed units
+        if (playerUnits.Count == 0)
+        {
+            currentlySelectedUnit = -1;
+        }
 
         // Change unit selection
         if (Input.GetMouseButtonDown(0))
@@ -113,7 +117,14 @@ public class LevelController : MonoBehaviour
             UpdateTiles();
         }
 
-        UnitSelector.transform.position = playerUnits[currentlySelectedUnit].transform.position;
+        if (currentlySelectedUnit != -1)
+        {
+            UnitSelector.transform.position = playerUnits[currentlySelectedUnit].transform.position;
+        }
+        else
+        {
+            Destroy(UnitSelector);
+        }
     }
 
     /// <summary>

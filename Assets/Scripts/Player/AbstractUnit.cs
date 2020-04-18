@@ -71,6 +71,17 @@ namespace Assets.Scripts.Player
             {
                 audioController.PlayUnitDeathSound();
                 Destroy(gameObject);
+
+                // Choose next unit
+                var nextUnit = levelController.playerUnits.Where(unit => unit != null && unit.ActionPoints > 0).ToList();
+                if (nextUnit.Count > 0)
+                {
+                    levelController.currentlySelectedUnit = levelController.playerUnits.IndexOf(nextUnit.First());
+                }
+                else
+                {
+                    levelController.currentlySelectedUnit = -1;
+                }
             }
         }
 
