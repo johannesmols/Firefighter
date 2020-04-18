@@ -36,7 +36,21 @@ public class LevelController : MonoBehaviour
 
         audioController.PlayMissionStartSound();
 
-        mainCamera.transform.position = new Vector3(playerUnits[currentlySelectedUnit].transform.position.x, mainCamera.transform.position.y, playerUnits[currentlySelectedUnit].transform.position.z);
+        mainCamera.transform.position = new Vector3(playerUnits[currentlySelectedUnit].transform.position.x, mainCamera.transform.position.y, playerUnits[currentlySelectedUnit].transform.position.z - 5f);
+    }
+
+    private Vector3Int GetTileClick()
+    {
+        var plane = new Plane(Vector3.up, 0f);
+        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (plane.Raycast(ray, out float distanceToPlane))
+        {
+            return tilemap.WorldToCell(ray.GetPoint(distanceToPlane));
+        }
+        else
+        {
+            return Vector3Int.zero;
+        }
     }
 
     public void Update()
@@ -50,7 +64,7 @@ public class LevelController : MonoBehaviour
         // Change unit selection
         if (Input.GetMouseButtonDown(0))
         {
-            var clickedCell = tilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+            var clickedCell = GetTileClick();
             var unitsOnThatCell = playerUnits.Where(unit => unit.TilePosition == clickedCell && unit.ActionPoints > 0).ToList();
             if (unitsOnThatCell.Count > 0)
             {
@@ -67,7 +81,7 @@ public class LevelController : MonoBehaviour
         {
             if (playerUnits.Count > 0)
             {
-                var clickedCell = tilemap.WorldToCell(Camera.main.ScreenToWorldPoint(Input.mousePosition));
+                var clickedCell = GetTileClick();
                 var clickedTile = (AbstractGameTile) tilemap.GetTile(clickedCell);
                 var currentUnit = playerUnits[currentlySelectedUnit];
                 var reachableTiles = TilemapHelper.FindReachableTiles(currentUnit.TilePosition, currentUnit.ActionPoints, tilemap);
@@ -160,7 +174,7 @@ public class LevelController : MonoBehaviour
             if (nextUnit.Count > 0)
             {
                 currentlySelectedUnit = playerUnits.IndexOf(nextUnit.First());
-                StartCoroutine(LerpCameraTo(mainCamera.transform.position, new Vector3(nextUnit.First().transform.position.x, mainCamera.transform.position.y, nextUnit.First().transform.position.z), 0.5f, 0.5f));
+                StartCoroutine(LerpCameraTo(mainCamera.transform.position, new Vector3(nextUnit.First().transform.position.x, mainCamera.transform.position.y, nextUnit.First().transform.position.z - 5f), 0.5f, 0.5f));
                 
                 //audioController.PlayUnitChooseSound();
             }
@@ -175,10 +189,13 @@ public class LevelController : MonoBehaviour
     {
         // find fire epicenter
         var fireTiles = TilemapHelper.GetTileDictionary(tilemap)[typeof(FireTile)];
-        var average = fireTiles.Aggregate((acc, cur) => acc + cur) / fireTiles.Count;
+        if (fireTiles.Count > 0)
+        {
+            var average = fireTiles.Aggregate((acc, cur) => acc + cur) / fireTiles.Count;
 
-        StartCoroutine(LerpCameraTo(mainCamera.transform.position, new Vector3(tilemap.CellToWorld(average).x, mainCamera.transform.position.y, tilemap.CellToWorld(average).z), 0.5f, 0.5f));
-        yield return new WaitForSecondsRealtime(1f);
+            StartCoroutine(LerpCameraTo(mainCamera.transform.position, new Vector3(tilemap.CellToWorld(average).x, mainCamera.transform.position.y, tilemap.CellToWorld(average).z - 5f), 0.5f, 0.5f));
+            yield return new WaitForSecondsRealtime(1f);
+        }
 
         var newTilesOnFireCnt = 0;
         foreach (var fireTile in tiles[typeof(FireTile)])
@@ -242,7 +259,7 @@ public class LevelController : MonoBehaviour
             audioController.PlayFireSpreadSound();
         }
 
-        StartCoroutine(LerpCameraTo(mainCamera.transform.position, new Vector3(playerUnits[currentlySelectedUnit].transform.position.x, mainCamera.transform.position.y, playerUnits[currentlySelectedUnit].transform.position.z), 0.5f, 0.5f));
+        StartCoroutine(LerpCameraTo(mainCamera.transform.position, new Vector3(playerUnits[currentlySelectedUnit].transform.position.x, mainCamera.transform.position.y, playerUnits[currentlySelectedUnit].transform.position.z - 5f), 0.5f, 0.5f));
         yield return new WaitForSecondsRealtime(1f);
     }
 
