@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.Tilemaps;
 
 public class LevelController : MonoBehaviour
@@ -22,6 +23,8 @@ public class LevelController : MonoBehaviour
     private bool isGameOver = false;
     private bool levelIsComplete = false;
     private System.Random random = new System.Random();
+
+    private List<String> levelOrder = new List<string>() { "Tutorial", "Level 1", "Level 2" };
 
     public void Start()
     {
@@ -218,6 +221,8 @@ public class LevelController : MonoBehaviour
             levelIsComplete = true;
             Debug.Log("Level complete, no fire can spread anymore");
             audioController.PlayMissionSuccessSound();
+
+            StartCoroutine(StartNextLevelDelayed(3));
         }
         else
         {
@@ -286,6 +291,9 @@ public class LevelController : MonoBehaviour
         {
             Debug.Log("Game over!");
             audioController.PlayMissionFailSound();
+
+            StartCoroutine(RestartLevelDelayed(3));
+
             return true;
         }
         return false;
@@ -296,6 +304,28 @@ public class LevelController : MonoBehaviour
         foreach (var playerUnit in playerUnits)
         {
             playerUnit.ResetActionPoints();
+        }
+    }
+
+    private IEnumerator RestartLevelDelayed(float seconds)
+    {
+        yield return new WaitForSecondsRealtime(seconds);
+        var currentScene = SceneManager.GetActiveScene();
+        SceneManager.LoadScene(currentScene.name);
+    }
+
+    private IEnumerator StartNextLevelDelayed(float seconds)
+    {
+        yield return new WaitForSecondsRealtime(seconds);
+        var currentScene = SceneManager.GetActiveScene();
+        var levelIndex = levelOrder.IndexOf(currentScene.name) + 1;
+        if (levelOrder.Count > levelIndex)
+        {
+            SceneManager.LoadScene(levelOrder[levelIndex]);
+        }
+        else
+        {
+            SceneManager.LoadScene("Startmenu");
         }
     }
 }
