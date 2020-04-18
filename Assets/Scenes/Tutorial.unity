@@ -1030,7 +1030,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Skip to the next round
+            m_StringArgument: Skip to the next round (SPACE)
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 1239887390}
@@ -17500,7 +17500,7 @@ MonoBehaviour:
             m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
             m_IntArgument: 0
             m_FloatArgument: 0
-            m_StringArgument: Special move
+            m_StringArgument: Special move (E)
             m_BoolArgument: 0
           m_CallState: 2
         - m_Target: {fileID: 1239887390}
