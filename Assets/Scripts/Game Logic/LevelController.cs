@@ -25,7 +25,7 @@ public class LevelController : MonoBehaviour
     private bool levelIsComplete = false;
     private System.Random random = new System.Random();
 
-    private readonly List<string> levelOrder = new List<string>() { "Tutorial", "Level 1", "Level 2" };
+    private readonly List<string> levelOrder = new List<string>() { "Tutorial", "Level 1", "Level 2", "Level 3" };
 
     public void Start()
     {
@@ -37,20 +37,6 @@ public class LevelController : MonoBehaviour
         audioController.PlayMissionStartSound();
 
         mainCamera.transform.position = new Vector3(playerUnits[currentlySelectedUnit].transform.position.x, mainCamera.transform.position.y, playerUnits[currentlySelectedUnit].transform.position.z - 5f);
-    }
-
-    private Vector3Int GetTileClick()
-    {
-        var plane = new Plane(Vector3.up, 0f);
-        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        if (plane.Raycast(ray, out float distanceToPlane))
-        {
-            return tilemap.WorldToCell(ray.GetPoint(distanceToPlane));
-        }
-        else
-        {
-            return Vector3Int.zero;
-        }
     }
 
     public void Update()
@@ -337,6 +323,20 @@ public class LevelController : MonoBehaviour
         foreach (var playerUnit in playerUnits)
         {
             playerUnit.ResetActionPoints();
+        }
+    }
+
+    private Vector3Int GetTileClick()
+    {
+        var plane = new Plane(Vector3.up, 0f);
+        var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        if (plane.Raycast(ray, out float distanceToPlane))
+        {
+            return tilemap.WorldToCell(ray.GetPoint(distanceToPlane));
+        }
+        else
+        {
+            return Vector3Int.zero;
         }
     }
 
