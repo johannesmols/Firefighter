@@ -17,6 +17,7 @@ public class LevelController : MonoBehaviour
     public Tilemap tilemap;
     public List<AbstractUnit> playerUnits;
     public GameObject UnitSelector;
+    public GameObject RangeDisplayHelper;
     public AudioController audioController;
     public Camera mainCamera;
 
@@ -24,6 +25,7 @@ public class LevelController : MonoBehaviour
     private bool isGameOver = false;
     private bool levelIsComplete = false;
     private System.Random random = new System.Random();
+    private bool calledRangeDisplayHelperOnce = false;
 
     private readonly List<string> levelOrder = new List<string>() { "Tutorial", "Level 1", "Level 2", "Level 3" };
 
@@ -47,6 +49,12 @@ public class LevelController : MonoBehaviour
             currentlySelectedUnit = -1;
         }
 
+        if (!calledRangeDisplayHelperOnce)
+        {
+            DisplayReachableTilesForCurrentUnit();
+            calledRangeDisplayHelperOnce = true;
+        }
+
         // Change unit selection
         if (Input.GetMouseButtonDown(0))
         {
@@ -57,6 +65,8 @@ public class LevelController : MonoBehaviour
                 currentlySelectedUnit = playerUnits.IndexOf(unitsOnThatCell.First());
 
                 var currentUnit = playerUnits.Find(a => a == unitsOnThatCell.First());
+
+                DisplayReachableTilesForCurrentUnit();
 
                 Debug.Log("Changed selection to " + currentUnit.name + ", " + currentUnit.ActionPoints + " AP left");
                 audioController.PlayUnitChooseSound();
@@ -107,6 +117,8 @@ public class LevelController : MonoBehaviour
                         currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
 
                         audioController.PlayUnitMoveSound();
+
+                        DisplayReachableTilesForCurrentUnit();
 
                         // Select next unit, no AP remaining
                         ChooseNextUnitOrGoToNextRound();
@@ -161,7 +173,8 @@ public class LevelController : MonoBehaviour
             {
                 currentlySelectedUnit = playerUnits.IndexOf(nextUnit.First());
                 StartCoroutine(LerpCameraTo(mainCamera.transform.position, new Vector3(nextUnit.First().transform.position.x, mainCamera.transform.position.y, nextUnit.First().transform.position.z - 5f), 0.5f, 0.5f));
-                
+                DisplayReachableTilesForCurrentUnit();
+
                 //audioController.PlayUnitChooseSound();
             }
             else
@@ -247,6 +260,7 @@ public class LevelController : MonoBehaviour
 
         StartCoroutine(LerpCameraTo(mainCamera.transform.position, new Vector3(playerUnits[currentlySelectedUnit].transform.position.x, mainCamera.transform.position.y, playerUnits[currentlySelectedUnit].transform.position.z - 5f), 0.5f, 0.5f));
         yield return new WaitForSecondsRealtime(1f);
+        DisplayReachableTilesForCurrentUnit();
     }
 
     public void ExecuteAction(Tuple<string, int, string> action, UnitType unitType, AbstractUnit unit)
@@ -265,6 +279,7 @@ public class LevelController : MonoBehaviour
                         {
                             tilemap.SetTile(unit.TilePosition, Resources.Load("TrenchTile", typeof(TrenchTile)) as TrenchTile);
                             unit.ActionPoints -= action.Item2;
+                            DisplayReachableTilesForCurrentUnit();
 
                             audioController.PlayDigTrenchSound();
 
@@ -294,6 +309,7 @@ public class LevelController : MonoBehaviour
                             {
                                 unit.ActionPoints -= action.Item2;
                                 audioController.PlayExtinguishFireSound();
+                                DisplayReachableTilesForCurrentUnit();
                             }
                         }
                     }
@@ -323,6 +339,37 @@ public class LevelController : MonoBehaviour
         foreach (var playerUnit in playerUnits)
         {
             playerUnit.ResetActionPoints();
+        }
+    }
+
+    public void DisplayReachableTilesForCurrentUnit()
+    {
+        DestroyReachableTilesDisplayHelp();
+
+        if (currentlySelectedUnit != -1)
+        {
+            var currentUnit = playerUnits[currentlySelectedUnit];
+            var reachableTiles = TilemapHelper.FindReachableTiles(currentUnit.TilePosition, currentUnit.ActionPoints, tilemap);
+            foreach (var fringe in reachableTiles)
+            {
+                foreach (var tile in fringe)
+                {
+                    if (tile.Item2 <= currentUnit.ActionPoints)
+                    {
+                        var newHelper = Instantiate(Resources.Load("RangeHexagon"), RangeDisplayHelper.transform) as GameObject;
+                        var cellPos = tilemap.CellToWorld(tile.Item1);
+                        newHelper.transform.position = new Vector3(cellPos.x, newHelper.transform.position.y, cellPos.z);
+                    }
+                }
+            }
+        }
+    }
+
+    public void DestroyReachableTilesDisplayHelp()
+    {
+        foreach (Transform child in RangeDisplayHelper.transform)
+        {
+            Destroy(child.gameObject);
         }
     }
 
