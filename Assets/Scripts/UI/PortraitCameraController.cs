@@ -13,7 +13,10 @@ public class PortraitCameraController : MonoBehaviour
     }
 
     private void Update() {
-        cameraTransform.position = new Vector3(followTransform.position.x, followTransform.position.y+1, followTransform.position.z-1);
+        if (followTransform != null)
+        {
+            cameraTransform.position = new Vector3(followTransform.position.x, followTransform.position.y + 1, followTransform.position.z - 1);
+        }
     }
 
     public void Show(Transform followTransform) {

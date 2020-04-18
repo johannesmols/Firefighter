@@ -21,7 +21,6 @@ public class InfoPanel : MonoBehaviour
     void Start()
     {
         levelController = GameObject.Find("LevelController").GetComponent<LevelController>();
-        selectedUnit = levelController.currentlySelectedUnit;
         currentUnit = levelController.playerUnits[this.selectedUnit];
         actionButton.onClick.AddListener(this.ActionButtonClicked);
         nextRoundButton.onClick.AddListener(this.NextRoundButtonClicked);
@@ -30,9 +29,19 @@ public class InfoPanel : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(this.selectedUnit != levelController.currentlySelectedUnit){
-            this.selectedUnit = levelController.currentlySelectedUnit;
-            currentUnit = levelController.playerUnits[this.selectedUnit];
+        if (levelController.playerUnits.Count > levelController.currentlySelectedUnit && levelController.currentlySelectedUnit != -1)
+        {
+            currentUnit = levelController.playerUnits[levelController.currentlySelectedUnit];
+        }
+        else
+        {
+            Debug.Log("All units dead. Can't show anything");
+
+            actionPointsTextField.GetComponent<UnityEngine.UI.Text>().text = "";
+            nameTextField.GetComponent<UnityEngine.UI.Text>().text = "";
+            specialMoveTextField.GetComponent<UnityEngine.UI.Text>().text = "";
+
+            return;
         }
 
         Transform unitTransform = currentUnit.ObjectTransform;
