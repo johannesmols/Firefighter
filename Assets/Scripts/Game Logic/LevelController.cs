@@ -18,14 +18,18 @@ public class LevelController : MonoBehaviour
     public List<AbstractUnit> playerUnits;
     public GameObject UnitSelector;
     public GameObject RangeDisplayHelper;
+    public GameObject GrassProps;
     public AudioController audioController;
     public Camera mainCamera;
 
+    [HideInInspector]
     public int currentlySelectedUnit = 0;
     private bool isGameOver = false;
     private bool levelIsComplete = false;
     private System.Random random = new System.Random();
     private bool calledRangeDisplayHelperOnce = false;
+
+    private List<Tuple<Vector3Int, GameObject>> grassPropsList = new List<Tuple<Vector3Int, GameObject>>();
 
     private readonly List<string> levelOrder = new List<string>() { "Tutorial", "Level 1", "Level 2", "Level 3" };
 
@@ -39,6 +43,8 @@ public class LevelController : MonoBehaviour
         audioController.PlayMissionStartSound();
 
         mainCamera.transform.position = new Vector3(playerUnits[currentlySelectedUnit].transform.position.x, mainCamera.transform.position.y, playerUnits[currentlySelectedUnit].transform.position.z - 5f);
+
+        CreateRandomTileProps();
     }
 
     public void Update()
@@ -258,9 +264,14 @@ public class LevelController : MonoBehaviour
             audioController.PlayFireSpreadSound();
         }
 
-        StartCoroutine(LerpCameraTo(mainCamera.transform.position, new Vector3(playerUnits[currentlySelectedUnit].transform.position.x, mainCamera.transform.position.y, playerUnits[currentlySelectedUnit].transform.position.z - 5f), 0.5f, 0.5f));
-        yield return new WaitForSecondsRealtime(1f);
+        if (currentlySelectedUnit != -1)
+        {
+            StartCoroutine(LerpCameraTo(mainCamera.transform.position, new Vector3(playerUnits[currentlySelectedUnit].transform.position.x, mainCamera.transform.position.y, playerUnits[currentlySelectedUnit].transform.position.z - 5f), 0.5f, 0.5f));
+            yield return new WaitForSecondsRealtime(1f);
+        }
+        
         DisplayReachableTilesForCurrentUnit();
+        CreateRandomTileProps();
     }
 
     public void ExecuteAction(Tuple<string, int, string> action, UnitType unitType, AbstractUnit unit)
@@ -339,6 +350,41 @@ public class LevelController : MonoBehaviour
         foreach (var playerUnit in playerUnits)
         {
             playerUnit.ResetActionPoints();
+        }
+    }
+
+    private void CreateRandomTileProps()
+    {
+        // remove objects that have changed tile type
+        for (int i = grassPropsList.Count - 1; i >= 0; i--)
+        {
+            if (!((AbstractGameTile)tilemap.GetTile(grassPropsList[i].Item1) is GrassTile))
+            {
+                Destroy(grassPropsList[i].Item2);
+                grassPropsList.RemoveAll(item => item.Item1 == grassPropsList[i].Item1);
+            }
+        }
+
+        var tileDic = TilemapHelper.GetTileDictionary(tilemap);
+        foreach (var tileType in tileDic.Keys)
+        {
+            var tilesWithType = tileDic[tileType];
+            if (tileType == typeof(GrassTile))
+            {
+                foreach (var tile in tilesWithType)
+                {
+                    if (grassPropsList.Count == 0 || !grassPropsList.Any(i => i.Item1 == tile))
+                    {
+                        var randomProp = UnityEngine.Random.Range(1, 4); // random prop 1-2 (2 is excluded)
+                        var newProp = Instantiate(Resources.Load("Forest/ForestProps" + randomProp), GrassProps.transform) as GameObject;
+                        var cellPos = tilemap.CellToWorld(tile);
+                        newProp.transform.position = new Vector3(cellPos.x, newProp.transform.position.y, cellPos.z);
+                        newProp.transform.eulerAngles = new Vector3(newProp.transform.rotation.x, UnityEngine.Random.Range(0f, 360f), newProp.transform.rotation.z);
+
+                        grassPropsList.Add(new Tuple<Vector3Int, GameObject>(tile, newProp));
+                    }
+                }
+            }
         }
     }
 
