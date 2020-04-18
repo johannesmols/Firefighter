@@ -144,7 +144,7 @@ public class LevelController : MonoBehaviour
         if (!levelIsComplete && !isGameOver)
         {
             Debug.Log("Starting next round");
-            SpreadFire(tiles, dynamicFireSpread);
+            StartCoroutine(SpreadFire(tiles, dynamicFireSpread));
             ResetActionPoints();
 
             isGameOver = IsGameOver(TilemapHelper.GetTileDictionary(tilemap));
@@ -171,8 +171,15 @@ public class LevelController : MonoBehaviour
         }
     }
 
-    private void SpreadFire(Dictionary<System.Type, List<Vector3Int>> tiles, bool dynamicSpread)
+    private IEnumerator SpreadFire(Dictionary<System.Type, List<Vector3Int>> tiles, bool dynamicSpread)
     {
+        // find fire epicenter
+        var fireTiles = TilemapHelper.GetTileDictionary(tilemap)[typeof(FireTile)];
+        var average = fireTiles.Aggregate((acc, cur) => acc + cur) / fireTiles.Count;
+
+        StartCoroutine(LerpCameraTo(mainCamera.transform.position, new Vector3(tilemap.CellToWorld(average).x, mainCamera.transform.position.y, tilemap.CellToWorld(average).z), 0.5f, 0.5f));
+        yield return new WaitForSecondsRealtime(1f);
+
         var newTilesOnFireCnt = 0;
         foreach (var fireTile in tiles[typeof(FireTile)])
         {
@@ -234,6 +241,9 @@ public class LevelController : MonoBehaviour
         {
             audioController.PlayFireSpreadSound();
         }
+
+        StartCoroutine(LerpCameraTo(mainCamera.transform.position, new Vector3(playerUnits[currentlySelectedUnit].transform.position.x, mainCamera.transform.position.y, playerUnits[currentlySelectedUnit].transform.position.z), 0.5f, 0.5f));
+        yield return new WaitForSecondsRealtime(1f);
     }
 
     public void ExecuteAction(Tuple<string, int, string> action, UnitType unitType, AbstractUnit unit)
