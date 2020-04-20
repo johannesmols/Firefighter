@@ -4942,7 +4942,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: START GAME
+  m_Text: NEXT
 --- !u!222 &674663253
 CanvasRenderer:
   m_ObjectHideFlags: 0
