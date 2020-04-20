@@ -24,7 +24,7 @@ namespace Assets.Scripts.Player
         [HideInInspector]
         public Transform ObjectTransform;
         [HideInInspector]
-        public Tuple<string, int, string>[] UnitActions = new Tuple<string, int, string>[9];
+        public Tuple<string, int, string, int>[] UnitActions = new Tuple<string, int, string, int>[9];
         [HideInInspector]
         public int ReachableFire;
 

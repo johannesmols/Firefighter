@@ -302,7 +302,7 @@ public class LevelController : MonoBehaviour
         CreateRandomTileProps();
     }
 
-    public void ExecuteAction(Tuple<string, int, string> action, UnitType unitType, AbstractUnit unit)
+    public void ExecuteAction(Tuple<string, int, string, int> action, UnitType unitType, AbstractUnit unit)
     {
         if (action != null)
         {
@@ -330,11 +330,11 @@ public class LevelController : MonoBehaviour
                         if (unitType != UnitType.FireTruck && unitType != UnitType.Firefighter)
                             return;
 
-                        var reachableFireTiles = TilemapHelper.FindReachableFireTiles(unit.TilePosition, unit.ActionPoints, tilemap);
+                        var reachableFireTiles = TilemapHelper.FindReachableFireTiles(unit.TilePosition, unit.UnitActions[0].Item4, tilemap);
                         if (unit.ActionPoints >= action.Item2 && reachableFireTiles.Count > 0)
                         {
                             extinguishTrigger = true;
-                            DisplayReachableFireTiresForCurrentUnit();
+                            DisplayReachableFireTilesForCurrentUnit();
                         }
                     }
                     break;
@@ -440,13 +440,13 @@ public class LevelController : MonoBehaviour
         }
     }
 
-    public void DisplayReachableFireTiresForCurrentUnit()
+    public void DisplayReachableFireTilesForCurrentUnit()
     {
         DestroyReachableFireTilesDisplayHelp();
         if (currentlySelectedUnit != -1)
         {
             var currentUnit = playerUnits[currentlySelectedUnit];
-            var reachableFireTiles = TilemapHelper.FindReachableFireTiles(currentUnit.TilePosition, currentUnit.ActionPoints, tilemap);
+            var reachableFireTiles = TilemapHelper.FindReachableFireTiles(currentUnit.TilePosition, currentUnit.UnitActions[0].Item4, tilemap);
             if (reachableFireTiles.Count > 0)
             {
                 foreach (var fringe in reachableFireTiles)
