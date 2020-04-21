@@ -18,6 +18,7 @@ public class LevelController : MonoBehaviour
     public List<AbstractUnit> playerUnits;
     public GameObject UnitSelector;
     public GameObject RangeDisplayHelper;
+    public GameObject RangeFireDisplayHelper;
     public GameObject GrassProps;
     public GameObject BurnedProps;
     public AudioController audioController;
@@ -29,6 +30,7 @@ public class LevelController : MonoBehaviour
     private bool levelIsComplete = false;
     private System.Random random = new System.Random();
     private bool calledRangeDisplayHelperOnce = false;
+    private bool extinguishTrigger = false;
 
     private List<Tuple<Vector3Int, GameObject>> grassPropsList = new List<Tuple<Vector3Int, GameObject>>();
     private List<Tuple<Vector3Int, GameObject>> burnedPropsList = new List<Tuple<Vector3Int, GameObject>>();
@@ -62,6 +64,7 @@ public class LevelController : MonoBehaviour
             DisplayReachableTilesForCurrentUnit();
             calledRangeDisplayHelperOnce = true;
         }
+   
 
         // Change unit selection
         if (Input.GetMouseButtonDown(0))
@@ -117,20 +120,43 @@ public class LevelController : MonoBehaviour
                     }
                 }
 
-                if (cellInFringe >= 0 && !playerUnits.Any(unit => unit.TilePosition == clickedCell) && (currentUnit.ActionPoints >= targetTile?.Item2 || currentUnit.ActionPoints >= targetFireTile?.Item2))
+                if (cellInFringe >= 0 && !playerUnits.Any(unit => unit.TilePosition == clickedCell) && (currentUnit.ActionPoints >= targetTile?.Item2 || currentUnit.ActionPoints >= targetFireTile?.Item2) && !extinguishTrigger)
                 {
-                        Debug.Log("Moved unit " + currentUnit.name + " from " + currentUnit.TilePosition + " to " + clickedCell + ", costing " + targetTile.Item2 + ". There are " + (currentUnit.ActionPoints - targetTile.Item2) + " AP left.");
-                        currentUnit.ActionPoints -= targetTile.Item2;
-                        currentUnit.TilePosition = clickedCell;
-                        currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
+                    Debug.Log("Moved unit " + currentUnit.name + " from " + currentUnit.TilePosition + " to " + clickedCell + ", costing " + targetTile.Item2 + ". There are " + (currentUnit.ActionPoints - targetTile.Item2) + " AP left.");
+                    currentUnit.ActionPoints -= targetTile.Item2;
+                    currentUnit.TilePosition = clickedCell;
+                    currentUnit.ObjectTransform.position = new Vector3(tilemap.CellToWorld(clickedCell).x, 0, tilemap.CellToWorld(clickedCell).z);
+                        
+                    audioController.PlayUnitMoveSound();
+                    DisplayReachableTilesForCurrentUnit();
 
-                        audioController.PlayUnitMoveSound();
 
-                        DisplayReachableTilesForCurrentUnit();
-
-                        // Select next unit, no AP remaining
-                        ChooseNextUnitOrGoToNextRound();
+                    // Select next unit, no AP remaining
+                    ChooseNextUnitOrGoToNextRound();
                 }
+
+                if (extinguishTrigger)
+                {
+                    extinguishTrigger = false;
+                    if (currentUnit.ActionPoints >= currentUnit.UnitActions[0].Item2 && reachableFireTiles.Count>0)
+                    {
+                        tilemap.SetTile(targetFireTile.Item1, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);
+                        currentUnit.ActionPoints -= currentUnit.UnitActions[0].Item2;
+                        DestroyReachableFireTilesDisplayHelp();
+                        audioController.PlayExtinguishFireSound();
+                        if (currentUnit.ActionPoints > 0)
+                        {
+                            DisplayReachableTilesForCurrentUnit();
+                        } else
+                        {
+                            ChooseNextUnitOrGoToNextRound();
+                        }
+                    } else
+                    {
+                        DisplayReachableTilesForCurrentUnit();
+                    }
+                }
+
             }
         }
         else if (Input.GetKeyDown(KeyCode.E))
@@ -276,7 +302,7 @@ public class LevelController : MonoBehaviour
         CreateRandomTileProps();
     }
 
-    public void ExecuteAction(Tuple<string, int, string> action, UnitType unitType, AbstractUnit unit)
+    public void ExecuteAction(Tuple<string, int, string, int> action, UnitType unitType, AbstractUnit unit)
     {
         if (action != null)
         {
@@ -293,7 +319,6 @@ public class LevelController : MonoBehaviour
                             tilemap.SetTile(unit.TilePosition, Resources.Load("TrenchTile", typeof(TrenchTile)) as TrenchTile);
                             unit.ActionPoints -= action.Item2;
                             DisplayReachableTilesForCurrentUnit();
-
                             audioController.PlayDigTrenchSound();
 
                             Debug.Log("Placed trench on tile " + unit.TilePosition + ", costing " + action.Item2 + " APs. There are " + (unit.ActionPoints) + " AP left.");
@@ -305,25 +330,11 @@ public class LevelController : MonoBehaviour
                         if (unitType != UnitType.FireTruck && unitType != UnitType.Firefighter)
                             return;
 
-                        var extinguished = 0;
-                        var fireTilesInRange = TilemapHelper.FindReachableFireTiles(unit.TilePosition, unit.ReachableFire, tilemap);
-                        if (unit.ActionPoints >= action.Item2)
+                        var reachableFireTiles = TilemapHelper.FindReachableFireTiles(unit.TilePosition, unit.UnitActions[0].Item4, tilemap);
+                        if (unit.ActionPoints >= action.Item2 && reachableFireTiles.Count > 0)
                         {
-                            for (int i = 1; i < fireTilesInRange.Count; i++)
-                            {
-                                foreach (var tile in fireTilesInRange[i])
-                                {
-                                    tilemap.SetTile(tile.Item1, Resources.Load("BurntTile", typeof(BurntTile)) as BurntTile);
-                                    extinguished++;
-                                }
-                            }
-
-                            if (extinguished > 0)
-                            {
-                                unit.ActionPoints -= action.Item2;
-                                audioController.PlayExtinguishFireSound();
-                                DisplayReachableTilesForCurrentUnit();
-                            }
+                            extinguishTrigger = true;
+                            DisplayReachableFireTilesForCurrentUnit();
                         }
                     }
                     break;
@@ -408,8 +419,8 @@ public class LevelController : MonoBehaviour
 
     public void DisplayReachableTilesForCurrentUnit()
     {
-        DestroyReachableTilesDisplayHelp();
-
+         DestroyReachableTilesDisplayHelp();
+      
         if (currentlySelectedUnit != -1)
         {
             var currentUnit = playerUnits[currentlySelectedUnit];
@@ -429,9 +440,39 @@ public class LevelController : MonoBehaviour
         }
     }
 
+    public void DisplayReachableFireTilesForCurrentUnit()
+    {
+        DestroyReachableFireTilesDisplayHelp();
+        if (currentlySelectedUnit != -1)
+        {
+            var currentUnit = playerUnits[currentlySelectedUnit];
+            var reachableFireTiles = TilemapHelper.FindReachableFireTiles(currentUnit.TilePosition, currentUnit.UnitActions[0].Item4, tilemap);
+            if (reachableFireTiles.Count > 0)
+            {
+                foreach (var fringe in reachableFireTiles)
+                {
+                    foreach (var tile in fringe)
+                    {
+                        var newHelper = Instantiate(Resources.Load("RangeFireHexagon"), RangeFireDisplayHelper.transform) as GameObject;
+                        var cellPos = tilemap.CellToWorld(tile.Item1);
+                        newHelper.transform.position = new Vector3(cellPos.x, newHelper.transform.position.y, cellPos.z);
+
+                    }
+                }
+            }
+        }
+    }
     public void DestroyReachableTilesDisplayHelp()
     {
         foreach (Transform child in RangeDisplayHelper.transform)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+
+    public void DestroyReachableFireTilesDisplayHelp()
+    {
+        foreach (Transform child in RangeFireDisplayHelper.transform)
         {
             Destroy(child.gameObject);
         }

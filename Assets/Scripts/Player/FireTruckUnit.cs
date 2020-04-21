@@ -13,7 +13,7 @@ namespace Assets.Scripts.Player
         public override void Start()
         {
             base.Start();
-            UnitActions[0] = new Tuple<string, int, string>("extinguish_fire", 4, "Extinguish all flames surrounding the fire truck in a range of two tiles.");
+            UnitActions[0] = new Tuple<string, int, string, int>("extinguish_fire", 4, "Extinguish all flames surrounding the fire truck in a range of two tiles.", 2);
             UnitType = UnitType.FireTruck;
             ActionPoints = (int)UnitType.FireTruck;
             ReachableFire = 2;
